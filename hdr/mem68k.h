@@ -61,9 +61,12 @@ extern void (*mem68k_store_byte[0x1000])(uint32 addr, uint8 data);
 extern void (*mem68k_store_word[0x1000])(uint32 addr, uint16 data);
 extern void (*mem68k_store_long[0x1000])(uint32 addr, uint32 data);
 
-#define fetchbyte(addr) mem68k_fetch_byte[((addr) & 0xFFFFFF)>>12]((addr) & 0xFFFFFF)
-#define fetchword(addr) mem68k_fetch_word[((addr) & 0xFFFFFF)>>12]((addr) & 0xFFFFFF)
-#define fetchlong(addr) mem68k_fetch_long[((addr) & 0xFFFFFF)>>12]((addr) & 0xFFFFFF)
+#define fetchbyte(addr) \
+	mem68k_fetch_byte[((addr) & 0xFFFFFF)>>12]((addr) & 0xFFFFFF)
+#define fetchword(addr) \
+	mem68k_fetch_word[((addr) & 0xFFFFFF)>>12]((addr) & 0xFFFFFF)
+#define fetchlong(addr) \
+	mem68k_fetch_long[((addr) & 0xFFFFFF)>>12]((addr) & 0xFFFFFF)
 
 /* XXX BUG: these direct routines do not check for over-run of the 64k
    cpu68k_ram block - so writing a long at $FFFF corrupts 3 bytes of data -
@@ -112,9 +115,12 @@ static __inline__ void storelong(uint32 addr, uint32 data)
 
 #else
 
-#define storebyte(addr,data) mem68k_store_byte[((addr) & 0xFFFFFF)>>12]((addr) & 0xFFFFFF,data)
-#define storeword(addr,data) mem68k_store_word[((addr) & 0xFFFFFF)>>12]((addr) & 0xFFFFFF,data)
-#define storelong(addr,data) mem68k_store_long[((addr) & 0xFFFFFF)>>12]((addr) & 0xFFFFFF,data)
+#define storebyte(addr,data) \
+	mem68k_store_byte[((addr) & 0xFFFFFF)>>12]((addr) & 0xFFFFFF,data)
+#define storeword(addr,data) \
+	mem68k_store_word[((addr) & 0xFFFFFF)>>12]((addr) & 0xFFFFFF,data)
+#define storelong(addr,data) \
+	mem68k_store_long[((addr) & 0xFFFFFF)>>12]((addr) & 0xFFFFFF,data)
 
 #endif
 

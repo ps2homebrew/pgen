@@ -195,7 +195,7 @@ void initialise()
 		if(saverHDD->checkSaveExist())
 		{
 			printf("hdd save exists\n");
-			saverHddAIO = new hddIO("hdd0:PGEN 1.1");
+			saverHddAIO = new hddIO("hdd0:PP.GEN");
 			saverHDD->saverAIO = saverHddAIO;
 			currentSaver = saverHDD;
 			pgenRuntimeSetting.settings.saveDevice = 1;
@@ -368,7 +368,7 @@ int pgenOptionsSave()
 	else
 		sprintf(openFilename, "%s/settings.cfg", currentSaver->savePath);
 
-	int fd = currentSaver->saverAIO->open(openFilename, O_RDWR | O_CREAT | O_TRUNC);
+	int fd = currentSaver->saverAIO->open(openFilename, O_WRONLY | O_RDWR | O_CREAT | O_TRUNC);
 	if(fd < 0)
 		return -1;
 

@@ -138,7 +138,7 @@ void guiRomlist::update(u32 padRepeat, u32 padNoRepeat)
 					if(strstr(sortedList[selection]->fileName, "cdfs:"))
 						currentAIO = new cdvdIO(2048);
 					// Trying to mount HDD partition
-					else if (strcmp(sortedList[selection]->fileName, "hdd0:PGEN 1.1") == 0)
+					else if (strcmp(sortedList[selection]->fileName, "hdd0:PP.GEN") == 0)
 						currentAIO = saverHddAIO;
 					else if(strstr(sortedList[selection]->fileName, "hdd0:"))
 						currentAIO = new hddIO(sortedList[selection]->fileName);
@@ -309,7 +309,7 @@ void guiRomlist::fillRomlist()
 #ifdef SHOW_ALL_FILES
 	numRoms = currentAIO->getdir(path, NULL, romlistDent, ROMLIST_MAX_ENTRIES);
 #else
-	numRoms = currentAIO->getdir(path, ".smd, .bin, .zip", romlistDent, ROMLIST_MAX_ENTRIES);
+	numRoms = currentAIO->getdir(path, ".smd, .bin, .zip, .gen", romlistDent, ROMLIST_MAX_ENTRIES);
 #endif
 
 	if(numRoms < 0)

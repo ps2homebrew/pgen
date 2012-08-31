@@ -1,13 +1,14 @@
-/***************************************************************/
-/*                                                             */
-/* YM2612.C : YM2612 emulator                                  */
-/*                                                             */
-/* Almost constantes are taken from the MAME core              */
-/*                                                             */
-/* This source is a part of Gens project (gens@consolemul.com) */
-/* Copyright (c) 2002 by Stéphane Dallongeville                */
-/*                                                             */
-/***************************************************************/
+/***********************************************************
+ *                                                         *
+ * YM2612.C : YM2612 emulator                              *
+ *                                                         *
+ * Almost constantes are taken from the MAME core          *
+ *                                                         *
+ * This source is a part of Gens project                   *
+ * Written by Stéphane Dallongeville (gens@consolemul.com) *
+ * Copyright (c) 2002 by Stéphane Dallongeville            *
+ *                                                         *
+ ***********************************************************/
 
 #include <math.h>
 #include <string.h>
@@ -229,12 +230,12 @@ int int_cnt;								// Interpolation calculation
 INLINE void CALC_FINC_SL(slot_ *SL, int finc, int kc)
 {
 	int ksr;
-
+	
 	SL->Finc = (finc + SL->DT[kc]) * SL->MUL;
 
 	ksr = kc >> SL->KSR_S;	// keycode atténuation
 
-	if (SL->KSR != ksr)		// si le KSR a changé alors
+	if (SL->KSR != ksr)			// si le KSR a changé alors
 	{						// les différents taux pour l'enveloppe sont mis à jour
 		SL->KSR = ksr;
 
@@ -402,7 +403,38 @@ int SLOT_SET(int Adr, unsigned char data)
 			if ((SL->Ecurp == RELEASE) && (SL->Ecnt < ENV_END)) SL->Einc = SL->EincR;
 			break;
 
-		case 0x90:	// SSG-EG ... not supported
+		case 0x90:
+/*			// SSG-EG envelope shapes :
+			//
+			// E  At Al H
+			//
+			// 1  0  0  0  \\\\
+			//
+			// 1  0  0  1  \___
+			//
+			// 1  0  1  0  \/\/
+			//              ___
+			// 1  0  1  1  \
+			//
+			// 1  1  0  0  ////
+			//              ___
+			// 1  1  0  1  /
+			//
+			// 1  1  1  0  /\/\
+			//
+			// 1  1  1  1  /___
+			//
+			// E  = SSG-EG enable
+			// At = Start negate
+			// Al = Altern
+			// H  = Hold
+
+			if (data & 0x08) SL->SEG = data & 0x0F;
+			else SL->SEG = 0;
+
+#if YM_DEBUG_LEVEL > 1
+			fprintf(debug_file, "CHANNEL[%d], SLOT[%d] SSG-EG = %.2X\n", nch, nsl, data);
+#endif*/
 			break;
 	}
 
@@ -647,9 +679,35 @@ void Env_Decay_Next(slot_ *SL)
 
 void Env_Substain_Next(slot_ *SL)
 {
-	SL->Ecnt = ENV_END;
-	SL->Einc = 0;
-	SL->Ecmp = ENV_END + 1;
+	if (SL->SEG & 8)	// SSG envelope type
+	{
+		if (SL->SEG & 1)
+		{
+			SL->Ecnt = ENV_END;
+			SL->Einc = 0;
+			SL->Ecmp = ENV_END + 1;
+		}
+		else
+		{
+			// re KEY ON
+
+			// SL->Fcnt = 0;
+			// SL->ChgEnM = 0xFFFFFFFF;
+
+			SL->Ecnt = 0;
+			SL->Einc = SL->EincA;
+			SL->Ecmp = ENV_DECAY;
+			SL->Ecurp = ATTACK;
+		}
+
+		SL->SEG ^= (SL->SEG & 2) << 1;
+	}
+	else
+	{
+		SL->Ecnt = ENV_END;
+		SL->Einc = 0;
+		SL->Ecmp = ENV_END + 1;
+	}
 }
 
 
@@ -661,30 +719,62 @@ void Env_Release_Next(slot_ *SL)
 }
 
 
-#define GET_CURRENT_PHASE							\
-in0 = (CH->SLOT[S0].Fcnt += CH->SLOT[S0].Finc);		\
-in1 = (CH->SLOT[S1].Fcnt += CH->SLOT[S1].Finc);		\
-in2 = (CH->SLOT[S2].Fcnt += CH->SLOT[S2].Finc);		\
-in3 = (CH->SLOT[S3].Fcnt += CH->SLOT[S3].Finc);
+#define GET_CURRENT_PHASE	\
+in0 = CH->SLOT[S0].Fcnt;	\
+in1 = CH->SLOT[S1].Fcnt;	\
+in2 = CH->SLOT[S2].Fcnt;	\
+in3 = CH->SLOT[S3].Fcnt;
 
 
-#define GET_CURRENT_PHASE_LFO																			\
-if (freq_LFO = (CH->FMS * LFO_FREQ_UP[i]) >> (LFO_HBITS - 1))											\
-{																										\
-	in0 = (CH->SLOT[S0].Fcnt += CH->SLOT[S0].Finc + ((CH->SLOT[S0].Finc * freq_LFO) >> LFO_FMS_LBITS));	\
-	in1 = (CH->SLOT[S1].Fcnt += CH->SLOT[S1].Finc + ((CH->SLOT[S1].Finc * freq_LFO) >> LFO_FMS_LBITS));	\
-	in2 = (CH->SLOT[S2].Fcnt += CH->SLOT[S2].Finc + ((CH->SLOT[S2].Finc * freq_LFO) >> LFO_FMS_LBITS));	\
-	in3 = (CH->SLOT[S3].Fcnt += CH->SLOT[S3].Finc + ((CH->SLOT[S3].Finc * freq_LFO) >> LFO_FMS_LBITS));	\
-}																										\
-else																									\
-{																										\
-	in0 = (CH->SLOT[S0].Fcnt += CH->SLOT[S0].Finc);														\
-	in1 = (CH->SLOT[S1].Fcnt += CH->SLOT[S1].Finc);														\
-	in2 = (CH->SLOT[S2].Fcnt += CH->SLOT[S2].Finc);														\
-	in3 = (CH->SLOT[S3].Fcnt += CH->SLOT[S3].Finc);														\
+#define UPDATE_PHASE					\
+CH->SLOT[S0].Fcnt += CH->SLOT[S0].Finc;	\
+CH->SLOT[S1].Fcnt += CH->SLOT[S1].Finc;	\
+CH->SLOT[S2].Fcnt += CH->SLOT[S2].Finc;	\
+CH->SLOT[S3].Fcnt += CH->SLOT[S3].Finc;
+
+
+#define UPDATE_PHASE_LFO																		\
+if (freq_LFO = (CH->FMS * LFO_FREQ_UP[i]) >> (LFO_HBITS - 1))									\
+{																								\
+	CH->SLOT[S0].Fcnt += CH->SLOT[S0].Finc + ((CH->SLOT[S0].Finc * freq_LFO) >> LFO_FMS_LBITS);	\
+	CH->SLOT[S1].Fcnt += CH->SLOT[S1].Finc + ((CH->SLOT[S1].Finc * freq_LFO) >> LFO_FMS_LBITS);	\
+	CH->SLOT[S2].Fcnt += CH->SLOT[S2].Finc + ((CH->SLOT[S2].Finc * freq_LFO) >> LFO_FMS_LBITS);	\
+	CH->SLOT[S3].Fcnt += CH->SLOT[S3].Finc + ((CH->SLOT[S3].Finc * freq_LFO) >> LFO_FMS_LBITS);	\
+}																								\
+else																							\
+{																								\
+	CH->SLOT[S0].Fcnt += CH->SLOT[S0].Finc;														\
+	CH->SLOT[S1].Fcnt += CH->SLOT[S1].Finc;														\
+	CH->SLOT[S2].Fcnt += CH->SLOT[S2].Finc;														\
+	CH->SLOT[S3].Fcnt += CH->SLOT[S3].Finc;														\
 }
 
 
+/*#define GET_CURRENT_ENV																				\
+if (CH->SLOT[S0].SEG & 4)																			\
+{																									\
+	if ((en0 = ENV_TAB[(CH->SLOT[S0].Ecnt >> ENV_LBITS)] + CH->SLOT[S0].TLL) > ENV_MASK) en0 = 0;	\
+	else en0 ^= ENV_MASK;																			\
+}																									\
+else en0 = ENV_TAB[(CH->SLOT[S0].Ecnt >> ENV_LBITS)] + CH->SLOT[S0].TLL;							\
+if (CH->SLOT[S1].SEG & 4)																			\
+{																									\
+	if ((en1 = ENV_TAB[(CH->SLOT[S1].Ecnt >> ENV_LBITS)] + CH->SLOT[S1].TLL) > ENV_MASK) en1 = 0;	\
+	else en1 ^= ENV_MASK;																			\
+}																									\
+else en1 = ENV_TAB[(CH->SLOT[S1].Ecnt >> ENV_LBITS)] + CH->SLOT[S1].TLL;							\
+if (CH->SLOT[S2].SEG & 4)																			\
+{																									\
+	if ((en2 = ENV_TAB[(CH->SLOT[S2].Ecnt >> ENV_LBITS)] + CH->SLOT[S2].TLL) > ENV_MASK) en2 = 0;	\
+	else en2 ^= ENV_MASK;																			\
+}																									\
+else en2 = ENV_TAB[(CH->SLOT[S2].Ecnt >> ENV_LBITS)] + CH->SLOT[S2].TLL;							\
+if (CH->SLOT[S3].SEG & 4)																			\
+{																									\
+	if ((en3 = ENV_TAB[(CH->SLOT[S3].Ecnt >> ENV_LBITS)] + CH->SLOT[S3].TLL) > ENV_MASK) en3 = 0;	\
+	else en3 ^= ENV_MASK;																			\
+}																									\
+else en3 = ENV_TAB[(CH->SLOT[S3].Ecnt >> ENV_LBITS)] + CH->SLOT[S3].TLL;*/
 #define GET_CURRENT_ENV													\
 en0 = ENV_TAB[(CH->SLOT[S0].Ecnt >> ENV_LBITS)] + CH->SLOT[S0].TLL;		\
 en1 = ENV_TAB[(CH->SLOT[S1].Ecnt >> ENV_LBITS)] + CH->SLOT[S1].TLL;		\
@@ -692,6 +782,33 @@ en2 = ENV_TAB[(CH->SLOT[S2].Ecnt >> ENV_LBITS)] + CH->SLOT[S2].TLL;		\
 en3 = ENV_TAB[(CH->SLOT[S3].Ecnt >> ENV_LBITS)] + CH->SLOT[S3].TLL;
 
 
+/*#define GET_CURRENT_ENV_LFO																					\
+env_LFO = LFO_ENV_UP[i];																					\
+																											\
+if (CH->SLOT[S0].SEG & 4)																					\
+{																											\
+	if ((en0 = ENV_TAB[(CH->SLOT[S0].Ecnt >> ENV_LBITS)] + CH->SLOT[S0].TLL) > ENV_MASK) en0 = 0;			\
+	else en0 = (en0 ^ ENV_MASK) + (env_LFO >> CH->SLOT[S0].AMS);											\
+}																											\
+else en0 = ENV_TAB[(CH->SLOT[S0].Ecnt >> ENV_LBITS)] + CH->SLOT[S0].TLL + (env_LFO >> CH->SLOT[S0].AMS);	\
+if (CH->SLOT[S1].SEG & 4)																					\
+{																											\
+	if ((en1 = ENV_TAB[(CH->SLOT[S1].Ecnt >> ENV_LBITS)] + CH->SLOT[S1].TLL) > ENV_MASK) en1 = 0;			\
+	else en1 = (en1 ^ ENV_MASK) + (env_LFO >> CH->SLOT[S1].AMS);											\
+}																											\
+else en1 = ENV_TAB[(CH->SLOT[S1].Ecnt >> ENV_LBITS)] + CH->SLOT[S1].TLL + (env_LFO >> CH->SLOT[S1].AMS);	\
+if (CH->SLOT[S2].SEG & 4)																					\
+{																											\
+	if ((en2 = ENV_TAB[(CH->SLOT[S2].Ecnt >> ENV_LBITS)] + CH->SLOT[S2].TLL) > ENV_MASK) en2 = 0;			\
+	else en2 = (en2 ^ ENV_MASK) + (env_LFO >> CH->SLOT[S2].AMS);											\
+}																											\
+else en2 = ENV_TAB[(CH->SLOT[S2].Ecnt >> ENV_LBITS)] + CH->SLOT[S2].TLL + (env_LFO >> CH->SLOT[S2].AMS);	\
+if (CH->SLOT[S3].SEG & 4)																					\
+{																											\
+	if ((en3 = ENV_TAB[(CH->SLOT[S3].Ecnt >> ENV_LBITS)] + CH->SLOT[S3].TLL) > ENV_MASK) en3 = 0;			\
+	else en3 = (en3 ^ ENV_MASK) + (env_LFO >> CH->SLOT[S3].AMS);											\
+}																											\
+else en3 = ENV_TAB[(CH->SLOT[S3].Ecnt >> ENV_LBITS)] + CH->SLOT[S3].TLL + (env_LFO >> CH->SLOT[S3].AMS);*/
 #define GET_CURRENT_ENV_LFO																				\
 env_LFO = LFO_ENV_UP[i];																				\
 																										\
@@ -853,6 +970,7 @@ void Update_Chan_Algo0(channel_ *CH, int **buf, int length)
 	for(i = 0; i < length; i++)
 	{
 		GET_CURRENT_PHASE
+		UPDATE_PHASE
 		GET_CURRENT_ENV
 		UPDATE_ENV
 		DO_ALGO_0
@@ -870,6 +988,7 @@ void Update_Chan_Algo1(channel_ *CH, int **buf, int length)
 	for(i = 0; i < length; i++)
 	{
 		GET_CURRENT_PHASE
+		UPDATE_PHASE
 		GET_CURRENT_ENV
 		UPDATE_ENV
 		DO_ALGO_1
@@ -887,6 +1006,7 @@ void Update_Chan_Algo2(channel_ *CH, int **buf, int length)
 	for(i = 0; i < length; i++)
 	{
 		GET_CURRENT_PHASE
+		UPDATE_PHASE
 		GET_CURRENT_ENV
 		UPDATE_ENV
 		DO_ALGO_2
@@ -904,6 +1024,7 @@ void Update_Chan_Algo3(channel_ *CH, int **buf, int length)
 	for(i = 0; i < length; i++)
 	{
 		GET_CURRENT_PHASE
+		UPDATE_PHASE
 		GET_CURRENT_ENV
 		UPDATE_ENV
 		DO_ALGO_3
@@ -921,6 +1042,7 @@ void Update_Chan_Algo4(channel_ *CH, int **buf, int length)
 	for(i = 0; i < length; i++)
 	{
 		GET_CURRENT_PHASE
+		UPDATE_PHASE
 		GET_CURRENT_ENV
 		UPDATE_ENV
 		DO_ALGO_4
@@ -938,6 +1060,7 @@ void Update_Chan_Algo5(channel_ *CH, int **buf, int length)
 	for(i = 0; i < length; i++)
 	{
 		GET_CURRENT_PHASE
+		UPDATE_PHASE
 		GET_CURRENT_ENV
 		UPDATE_ENV
 		DO_ALGO_5
@@ -955,6 +1078,7 @@ void Update_Chan_Algo6(channel_ *CH, int **buf, int length)
 	for(i = 0; i < length; i++)
 	{
 		GET_CURRENT_PHASE
+		UPDATE_PHASE
 		GET_CURRENT_ENV
 		UPDATE_ENV
 		DO_ALGO_6
@@ -972,6 +1096,7 @@ void Update_Chan_Algo7(channel_ *CH, int **buf, int length)
 	for(i = 0; i < length; i++)
 	{
 		GET_CURRENT_PHASE
+		UPDATE_PHASE
 		GET_CURRENT_ENV
 		UPDATE_ENV
 		DO_ALGO_7
@@ -988,7 +1113,8 @@ void Update_Chan_Algo0_LFO(channel_ *CH, int **buf, int length)
 
 	for(i = 0; i < length; i++)
 	{
-		GET_CURRENT_PHASE_LFO
+		GET_CURRENT_PHASE
+		UPDATE_PHASE_LFO
 		GET_CURRENT_ENV_LFO
 		UPDATE_ENV
 		DO_ALGO_0
@@ -1005,7 +1131,8 @@ void Update_Chan_Algo1_LFO(channel_ *CH, int **buf, int length)
 
 	for(i = 0; i < length; i++)
 	{
-		GET_CURRENT_PHASE_LFO
+		GET_CURRENT_PHASE
+		UPDATE_PHASE_LFO
 		GET_CURRENT_ENV_LFO
 		UPDATE_ENV
 		DO_ALGO_1
@@ -1022,7 +1149,8 @@ void Update_Chan_Algo2_LFO(channel_ *CH, int **buf, int length)
 
 	for(i = 0; i < length; i++)
 	{
-		GET_CURRENT_PHASE_LFO
+		GET_CURRENT_PHASE
+		UPDATE_PHASE_LFO
 		GET_CURRENT_ENV_LFO
 		UPDATE_ENV
 		DO_ALGO_2
@@ -1039,7 +1167,8 @@ void Update_Chan_Algo3_LFO(channel_ *CH, int **buf, int length)
 
 	for(i = 0; i < length; i++)
 	{
-		GET_CURRENT_PHASE_LFO
+		GET_CURRENT_PHASE
+		UPDATE_PHASE_LFO
 		GET_CURRENT_ENV_LFO
 		UPDATE_ENV
 		DO_ALGO_3
@@ -1056,7 +1185,8 @@ void Update_Chan_Algo4_LFO(channel_ *CH, int **buf, int length)
 
 	for(i = 0; i < length; i++)
 	{
-		GET_CURRENT_PHASE_LFO
+		GET_CURRENT_PHASE
+		UPDATE_PHASE_LFO
 		GET_CURRENT_ENV_LFO
 		UPDATE_ENV
 		DO_ALGO_4
@@ -1073,7 +1203,8 @@ void Update_Chan_Algo5_LFO(channel_ *CH, int **buf, int length)
 
 	for(i = 0; i < length; i++)
 	{
-		GET_CURRENT_PHASE_LFO
+		GET_CURRENT_PHASE
+		UPDATE_PHASE_LFO
 		GET_CURRENT_ENV_LFO
 		UPDATE_ENV
 		DO_ALGO_5
@@ -1090,7 +1221,8 @@ void Update_Chan_Algo6_LFO(channel_ *CH, int **buf, int length)
 
 	for(i = 0; i < length; i++)
 	{
-		GET_CURRENT_PHASE_LFO
+		GET_CURRENT_PHASE
+		UPDATE_PHASE_LFO
 		GET_CURRENT_ENV_LFO
 		UPDATE_ENV
 		DO_ALGO_6
@@ -1107,7 +1239,8 @@ void Update_Chan_Algo7_LFO(channel_ *CH, int **buf, int length)
 
 	for(i = 0; i < length; i++)
 	{
-		GET_CURRENT_PHASE_LFO
+		GET_CURRENT_PHASE
+		UPDATE_PHASE_LFO
 		GET_CURRENT_ENV_LFO
 		UPDATE_ENV
 		DO_ALGO_7
@@ -1132,6 +1265,7 @@ void Update_Chan_Algo0_Int(channel_ *CH, int **buf, int length)
 	for(i = 0; i < length; i++)
 	{
 		GET_CURRENT_PHASE
+		UPDATE_PHASE
 		GET_CURRENT_ENV
 		UPDATE_ENV
 		DO_ALGO_0
@@ -1151,6 +1285,7 @@ void Update_Chan_Algo1_Int(channel_ *CH, int **buf, int length)
 	for(i = 0; i < length; i++)
 	{
 		GET_CURRENT_PHASE
+		UPDATE_PHASE
 		GET_CURRENT_ENV
 		UPDATE_ENV
 		DO_ALGO_1
@@ -1170,6 +1305,7 @@ void Update_Chan_Algo2_Int(channel_ *CH, int **buf, int length)
 	for(i = 0; i < length; i++)
 	{
 		GET_CURRENT_PHASE
+		UPDATE_PHASE
 		GET_CURRENT_ENV
 		UPDATE_ENV
 		DO_ALGO_2
@@ -1189,6 +1325,7 @@ void Update_Chan_Algo3_Int(channel_ *CH, int **buf, int length)
 	for(i = 0; i < length; i++)
 	{
 		GET_CURRENT_PHASE
+		UPDATE_PHASE
 		GET_CURRENT_ENV
 		UPDATE_ENV
 		DO_ALGO_3
@@ -1201,6 +1338,7 @@ void Update_Chan_Algo4_Int(channel_ *CH, int **buf, int length)
 {
 	int i;
 
+
 	if ((CH->SLOT[S1].Ecnt == ENV_END) && (CH->SLOT[S3].Ecnt == ENV_END)) return;
 
 	int_cnt = YM2612.Inter_Cnt;
@@ -1208,6 +1346,7 @@ void Update_Chan_Algo4_Int(channel_ *CH, int **buf, int length)
 	for(i = 0; i < length; i++)
 	{
 		GET_CURRENT_PHASE
+		UPDATE_PHASE
 		GET_CURRENT_ENV
 		UPDATE_ENV
 		DO_ALGO_4
@@ -1227,6 +1366,7 @@ void Update_Chan_Algo5_Int(channel_ *CH, int **buf, int length)
 	for(i = 0; i < length; i++)
 	{
 		GET_CURRENT_PHASE
+		UPDATE_PHASE
 		GET_CURRENT_ENV
 		UPDATE_ENV
 		DO_ALGO_5
@@ -1246,6 +1386,7 @@ void Update_Chan_Algo6_Int(channel_ *CH, int **buf, int length)
 	for(i = 0; i < length; i++)
 	{
 		GET_CURRENT_PHASE
+		UPDATE_PHASE
 		GET_CURRENT_ENV
 		UPDATE_ENV
 		DO_ALGO_6
@@ -1265,6 +1406,7 @@ void Update_Chan_Algo7_Int(channel_ *CH, int **buf, int length)
 	for(i = 0; i < length; i++)
 	{
 		GET_CURRENT_PHASE
+		UPDATE_PHASE
 		GET_CURRENT_ENV
 		UPDATE_ENV
 		DO_ALGO_7
@@ -1283,7 +1425,8 @@ void Update_Chan_Algo0_LFO_Int(channel_ *CH, int **buf, int length)
 
 	for(i = 0; i < length; i++)
 	{
-		GET_CURRENT_PHASE_LFO
+		GET_CURRENT_PHASE
+		UPDATE_PHASE_LFO
 		GET_CURRENT_ENV_LFO
 		UPDATE_ENV
 		DO_ALGO_0
@@ -1302,7 +1445,8 @@ void Update_Chan_Algo1_LFO_Int(channel_ *CH, int **buf, int length)
 
 	for(i = 0; i < length; i++)
 	{
-		GET_CURRENT_PHASE_LFO
+		GET_CURRENT_PHASE
+		UPDATE_PHASE_LFO
 		GET_CURRENT_ENV_LFO
 		UPDATE_ENV
 		DO_ALGO_1
@@ -1321,7 +1465,8 @@ void Update_Chan_Algo2_LFO_Int(channel_ *CH, int **buf, int length)
 
 	for(i = 0; i < length; i++)
 	{
-		GET_CURRENT_PHASE_LFO
+		GET_CURRENT_PHASE
+		UPDATE_PHASE_LFO
 		GET_CURRENT_ENV_LFO
 		UPDATE_ENV
 		DO_ALGO_2
@@ -1340,7 +1485,8 @@ void Update_Chan_Algo3_LFO_Int(channel_ *CH, int **buf, int length)
 
 	for(i = 0; i < length; i++)
 	{
-		GET_CURRENT_PHASE_LFO
+		GET_CURRENT_PHASE
+		UPDATE_PHASE_LFO
 		GET_CURRENT_ENV_LFO
 		UPDATE_ENV
 		DO_ALGO_3
@@ -1359,7 +1505,8 @@ void Update_Chan_Algo4_LFO_Int(channel_ *CH, int **buf, int length)
 
 	for(i = 0; i < length; i++)
 	{
-		GET_CURRENT_PHASE_LFO
+		GET_CURRENT_PHASE
+		UPDATE_PHASE_LFO
 		GET_CURRENT_ENV_LFO
 		UPDATE_ENV
 		DO_ALGO_4
@@ -1378,7 +1525,8 @@ void Update_Chan_Algo5_LFO_Int(channel_ *CH, int **buf, int length)
 
 	for(i = 0; i < length; i++)
 	{
-		GET_CURRENT_PHASE_LFO
+		GET_CURRENT_PHASE
+		UPDATE_PHASE_LFO
 		GET_CURRENT_ENV_LFO
 		UPDATE_ENV
 		DO_ALGO_5
@@ -1397,7 +1545,8 @@ void Update_Chan_Algo6_LFO_Int(channel_ *CH, int **buf, int length)
 
 	for(i = 0; i < length; i++)
 	{
-		GET_CURRENT_PHASE_LFO
+		GET_CURRENT_PHASE
+		UPDATE_PHASE_LFO
 		GET_CURRENT_ENV_LFO
 		UPDATE_ENV
 		DO_ALGO_6
@@ -1416,7 +1565,8 @@ void Update_Chan_Algo7_LFO_Int(channel_ *CH, int **buf, int length)
 
 	for(i = 0; i < length; i++)
 	{
-		GET_CURRENT_PHASE_LFO
+		GET_CURRENT_PHASE
+		UPDATE_PHASE_LFO
 		GET_CURRENT_ENV_LFO
 		UPDATE_ENV
 		DO_ALGO_7
@@ -1448,6 +1598,7 @@ int YM2612_Init(int Clock, int Rate, int Interpolation)
 	// prescale set to 6 by default
 
 	YM2612.Frequence = ((double) YM2612.Clock / (double) YM2612.Rate) / 144.0;
+	YM2612.TimerBase = (int) (YM2612.Frequence * 4096.0);
 
 	if ((Interpolation) && (YM2612.Frequence > 1.0))
 	{
@@ -1736,6 +1887,15 @@ int YM2612_Reset(void)
 
 int YM2612_Read(void)
 {
+/*	static int cnt = 0;
+
+	if (cnt++ == 50)
+	{
+		cnt = 0;
+		return YM2612.Status;
+	}
+	else return YM2612.Status | 0x80;
+*/
 	return YM2612.Status;
 }
 
@@ -1820,7 +1980,7 @@ void YM2612_Update(int **buf, int length)
 	int i, j, algo_type;
 
 	YM2612.LFOinc = 0; // turn off LFO for pgen
-
+	
 	// Mise à jour des pas des compteurs-fréquences s'ils ont été modifiés
 
 	if (YM2612.CHANNEL[0].SLOT[0].Finc == -1) CALC_FINC_CH(&YM2612.CHANNEL[0]);
@@ -1843,13 +2003,32 @@ void YM2612_Update(int **buf, int length)
 	if (YM2612.CHANNEL[4].SLOT[0].Finc == -1) CALC_FINC_CH(&YM2612.CHANNEL[4]);
 	if (YM2612.CHANNEL[5].SLOT[0].Finc == -1) CALC_FINC_CH(&YM2612.CHANNEL[5]);
 
+/*
+	CALC_FINC_CH(&YM2612.CHANNEL[0]);
+	CALC_FINC_CH(&YM2612.CHANNEL[1]);
+	if (YM2612.Mode & 0x40)
+	{
+		CALC_FINC_SL(&(YM2612.CHANNEL[2].SLOT[0]), FINC_TAB[YM2612.CHANNEL[2].FNUM[2]] >> (7 - YM2612.CHANNEL[2].FOCT[2]), YM2612.CHANNEL[2].KC[2]);
+		CALC_FINC_SL(&(YM2612.CHANNEL[2].SLOT[1]), FINC_TAB[YM2612.CHANNEL[2].FNUM[3]] >> (7 - YM2612.CHANNEL[2].FOCT[3]), YM2612.CHANNEL[2].KC[3]);
+		CALC_FINC_SL(&(YM2612.CHANNEL[2].SLOT[2]), FINC_TAB[YM2612.CHANNEL[2].FNUM[1]] >> (7 - YM2612.CHANNEL[2].FOCT[1]), YM2612.CHANNEL[2].KC[1]);
+		CALC_FINC_SL(&(YM2612.CHANNEL[2].SLOT[3]), FINC_TAB[YM2612.CHANNEL[2].FNUM[0]] >> (7 - YM2612.CHANNEL[2].FOCT[0]), YM2612.CHANNEL[2].KC[0]);
+	}
+	else
+	{
+		CALC_FINC_CH(&YM2612.CHANNEL[2]);
+	}
+	CALC_FINC_CH(&YM2612.CHANNEL[3]);
+	CALC_FINC_CH(&YM2612.CHANNEL[4]);
+	CALC_FINC_CH(&YM2612.CHANNEL[5]);
+*/
+
 	if (YM2612.Inter_Step & 0x04000) algo_type = 0;
 	else algo_type = 16;
 
 	if (YM2612.LFOinc)
 	{
 		// Precalcul LFO wav
-
+		
 		for(i = 0; i < length; i++)
 		{
 			j = ((YM2612.LFOcnt += YM2612.LFOinc) >> LFO_LBITS) & LFO_MASK;
@@ -1880,7 +2059,8 @@ int YM2612_Save(unsigned char SAVE[0x200])
 		SAVE[0x000 + i] = YM2612.REG[0][i];
 		SAVE[0x100 + i] = YM2612.REG[1][i];
 	}
-
+//	memcpy(SAVE+0x000, YM2612.REG[0], 0x100);
+//	memcpy(SAVE+0x100, YM2612.REG[1], 0x100);
 	return 0;
 }
 

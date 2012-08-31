@@ -1,14 +1,13 @@
 /* Generator is (c) James Ponder, 1997-2001 http://www.squish.net/generator/ */
 
 #include "generator.h"
+
 #include "vdp.h"
 #include "cpu68k.h"
 #include "cpuz80.h"
 #include "reg68k.h"
 #include "ui.h"
 #include "gensound.h"
-
-//#include "snprintf.h"
 
 /* due to DMA transfers, event_nextevent can be called during an instruction
    cycle (reg68k_external_execute -> instruction -> vdp write -> dma ->

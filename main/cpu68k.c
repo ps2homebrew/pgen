@@ -427,7 +427,6 @@ void cpu68k_reset(void)
       ui_err("Out of memory");
     cpu68k_ram_clear();
   }
-  memset(cpu68k_ram, 0, 0x10000);
 
   regs.pc = fetchlong(4);
   regs.regs[15] = fetchlong(0);

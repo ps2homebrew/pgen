@@ -10,3 +10,168 @@ Additionally you need the following tools:
 You can get the usb driver from the ps2sdk.
 
 Well, Enjoy :)
+
+
+pGen folder structure:
+--cpu68k/			part of original generator 0.35 source (similar to orgins)
+--|--def68k.c
+--|--def68k.def
+--|--gen68k.c
+--|--tab68k.c
+--|--Makefile
+--main/				part of original generator 0.35 source (full remake)
+--|--cpu68k.c
+--|--cpuz80.c
+--|--event.c
+--|--generator.c
+--|--gensound.c
+--|--mem68k.c
+--|--memz80.c
+--|--reg68k.c
+--|--setjmp.S
+--|--vdp.c
+--|--Makefile
+--hdr/				all headers from original generator 0.35 (??? + smth else)
+--|--cmz80.h
+--|--config.h
+--|--cpu68k.h
+--|--cpu68k-inline.h
+--|--cpuintrf.h
+--|--cpuz80.h
+--|--ctype.h
+--|--def68k-funcs.h
+--|--def68k-iibs.h
+--|--def68k-proto.h
+--|--diss68k.h
+--|--event.h
+--|--gen68k.h
+--|--generator.h
+--|--gensound.h
+--|--gensoundp.h
+--|--genstate.h
+--|--machine.h
+--|--mem68k.h
+--|--memz80.h
+--|--mipsregs.h
+--|--osd_cpu.h
+--|--reg68k.h
+--|--registers.h
+--|--setjmp.h
+--|--ui.h
+--|--uip.h
+--|--uiplot.h
+--|--vdp.h
+--sound/			sound support from gens
+--|--psg.c
+--|--psg.h
+--|--ym2612.c
+--|--ym2612.h
+--|--Makefile
+--z80/				z80 module from mame 0.36 (??? or not)
+--|--cpuintrf.h
+--|--osd_cpu.h
+--|--z80.c
+--|--z80.h
+--|--z80daa.h
+--|--Makefile
+--unzip/			dor unzipping zipped roms (1992 year code)
+--|--explode.c
+--|--unreduce.c
+--|--unshrink.c
+--|--unz.h
+--|--unzip.c
+--|--unzip.h
+--|--unzipP.h
+--|--Makefile
+--zlib/				zlib 1.1.3 with some changes for ps2 (for gzipping save states)
+--|--adler32.c
+--|--compress.c
+--|--crc32.c
+--|--deflate.c
+--|--deflate.h
+--|--example.c
+--|--gzio.c
+--|--infblock.c
+--|--infblock.h
+--|--infcodes.c
+--|--infcodes.h
+--|--inffast.c
+--|--inffast.h
+--|--inffixed.h
+--|--inflate.c
+--|--inftrees.c
+--|--inftrees.h
+--|--infutil.c
+--|--infutil.h
+--|--trees.c
+--|--trees.h
+--|--uncompr.c
+--|--zconf.h
+--|--zlib.h
+--|--zutil.c
+--|--zutil.h
+--|--Makefile
+--data/				music files (*.mod)
+--|--*.mod
+--static-data/			fonts, irx modules, music, icons, background
+--|--.png
+--|--pgenbg.iif.codejunkies
+--|--ocra.fnt
+--|--zerohour.fnt
+--|--sonic.icn
+--|--folder.iif
+--|--pgenbg.iif
+--|--amigamod.irx
+--|--ps2dev9.irx
+--|--ps2fs.irx
+--|--ps2hdd.irx
+--|--usbd.irx
+--|--pgenbg.iif.original
+--|--Makefile
+--build/			temporary folder which contains all builded *.o objects
+--gui/				ps2 specific code for building gui objects
+--|--credits.cpp
+--|--credits.h
+--|--gui.cpp
+--|--gui.h
+--|--ingame.cpp
+--|--ingame.h
+--|--options.cpp
+--|--options.h
+--|--romlist.cpp
+--|--romlist.h
+--|--saveman.cpp
+--|--saveman.h
+--|--scrollList.cpp
+--|--scrollList.h
+--|--Makefile
+--ps2/				main ps2 code
+--|--aio.h
+--|--aio-fio.cpp
+--|--aio-fio.h
+--|--aioCdvd.cpp
+--|--aioDatafile.cpp
+--|--aioHdd.cpp
+--|--aioMc.cpp
+--|--aioUSB.cpp
+--|--data.h
+--|--gensoundp-ps2.cpp
+--|--gfx.cpp
+--|--gfx.h
+--|--input.cpp
+--|--input.h
+--|--mass_rpc.h
+--|--pgen.cpp
+--|--pgen.h
+--|--pgen_vars.h
+--|--qsort.c
+--|--ras-drawplane.h
+--|--render.cpp
+--|--render.h
+--|--rom.cpp
+--|--rom.h
+--|--save.cpp
+--|--save.h
+--|--state.cpp
+--|--state.h
+--|--Makefile

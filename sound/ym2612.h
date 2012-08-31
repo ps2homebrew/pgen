@@ -25,9 +25,10 @@ typedef struct slot__ {
 	int KSR_S;	// Key Scale Rate Shift = facteur de prise en compte du KSL dans la variations de l'enveloppe
 	int KSR;	// Key Scale Rate = cette valeur est calculée par rapport à la fréquence actuelle, elle va influer
 				// sur les différents paramètres de l'enveloppe comme l'attaque, le decay ...  comme dans la réalité !
-	int *AR;	// Attack Rate (table pointeur) = Taux pour d'attaque (AR[KSR])
+	int SEG;	// Type enveloppe SSG
+	int *AR;	// Attack Rate (table pointeur) = Taux d'attaque (AR[KSR])
 	int *DR;	// Decay Rate (table pointeur) = Taux pour la régression (DR[KSR])
-	int *SR;	// Sustin Rate (table pointeur) = Taux pour la maintenu (SR[KSR])
+	int *SR;	// Sustin Rate (table pointeur) = Taux pour le maintien (SR[KSR])
 	int *RR;	// Release Rate (table pointeur) = Taux pour le relâchement (RR[KSR])
 	int Fcnt;	// Frequency Count = compteur-fréquence pour déterminer l'amplitude actuelle (SIN[Finc >> 16])
 	int Finc;	// frequency step = pas d'incrémentation du compteur-fréquence
@@ -75,6 +76,7 @@ typedef struct channel__ {
 typedef struct ym2612__ {
 	int Clock;			// Horloge YM2612
 	int Rate;			// Sample Rate (11025/22050/44100)
+	int TimerBase;		// TimerBase calculation
 	int Status;			// YM2612 Status (timer overflow)
 	int OPNAadr;		// addresse pour l'écriture dans l'OPN A (propre à l'émulateur)
 	int OPNBadr;		// addresse pour l'écriture dans l'OPN B (propre à l'émulateur)
@@ -90,6 +92,7 @@ typedef struct ym2612__ {
 	int Mode;			// Mode actuel des voie 3 et 6 (normal / spécial)
 	int DAC;			// DAC enabled flag
 	int DACdata;		// DAC data
+	int spacer;			// MSVC aligns doubles to 8 byte boundaries, but gcc and mingw only align to 4, so this spacer is needed for linux savestate compatibility
 	double Frequence;	// Fréquence de base, se calcul par rapport à l'horlage et au sample rate
 	unsigned int Inter_Cnt;			// Interpolation Counter
 	unsigned int Inter_Step;		// Interpolation Step
