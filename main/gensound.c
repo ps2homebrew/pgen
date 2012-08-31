@@ -23,7 +23,7 @@
 */
 /*** variables externed ***/
 
-unsigned int sound_speed = 24000;    /* sample rate */
+unsigned int sound_speed = 48000;    /* sample rate 24000*/
 
 int sound_debug = 0;            /* debug mode */
 int sound_feedback = 0;         /* -1, running out of sound
@@ -69,7 +69,7 @@ int sound_init(void)
   sound_threshold = sound_minfields * sound_sampsperfield;
 
   sound_start();
-    if(YM2612Init(vdp_clock / 7,sound_speed)) {
+    if(YM2612_Init(vdp_clock / 7,sound_speed,0)) {
     LOG_VERBOSE(("YM2612 failed init"));
     sound_stop();
     return 1;
@@ -181,7 +181,8 @@ void sound_sn76496store(uint8 data)
 
 void sound_genreset(void)
 {
-  YM2612ResetChip();
+//  YM2612ResetChip(0);
+  YM2612_Reset();
 }
 
 /*** sound_line - called at end of line ***/
@@ -216,7 +217,7 @@ static void sound_process(void)
 		PSG_Update(tbuf,sound_sampsperfield);
 
 	if (sound_fm)
-		YM2612Update(tbuf,sound_sampsperfield);
+		YM2612_Update(tbuf,sound_sampsperfield);
 
 	for(i=0;i<sound_sampsperfield;i++) {
 		if(sound_soundbuf[0][i] > 0x7FFF) sound_soundbuf[0][i] = 0x7FFF;

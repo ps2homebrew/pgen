@@ -156,7 +156,7 @@ void initialise()
 
 	loadHddModules();
 	poweroffInit();
-	poweroffSetCallback(powerOffCallback, NULL);
+	poweroffSetCallback(&powerOffCallback, NULL);
 
 	// Setup default region settings (will be over-written if a config file is found)
 	if(GS_TV_AUTO == GS_TV_NTSC)
@@ -351,6 +351,7 @@ int loadModuleBuffer(u8 *buffer, int size, int argc, char *argv)
 void powerOffCallback(void *arg)
 {
 	pgenState = PGEN_STATE_GUI;
+	poweroffShutdown();
 }
 
 
