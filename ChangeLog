@@ -1,0 +1,87 @@
+- PGEN v1.5.1t Release (17/07/12):
+  * Updated to latest PS2SDK
+  * Better -clean command by AKuHAK
+  * Returned HDD read mode (maybe buggy) by AKuHAK
+
+- PGEN v1.5.1s Release (22/04/10):
+  * The new ps3 look and music was done by Samson from ps3hax.
+  * The modifications for the ps3 were done by aries2k
+  * This version doesnŽt support hdd
+  * All references to naplink were removedThe SifIopReset sequence was removed and replaced with the one from uLaunch.elf by E.P and dlanor
+  * All necessary .Irx modules (100% homebrew) have been embedded in the elf 
+
+- PGEN v1.5.1 Release (18/03/07):
+  * Now using older ps2hdd related IRX modules instead of latest 
+    PS2SDK ones because console wasn't turning off!
+  * Fixed minor credits screen scroll bug.
+
+- PGEN v1.5 Release (10/01/07):
+  * CPU68K ABCD instruction fix by bootsector (thanks Barry!)
+  * Added  gslib 0.51 library files
+  * Changed background image (thanks to luckess ;)
+  
+
+- PGEN v1.4 Release (28/07/06):
+  * Updated to recent ps2sdk.
+  * Added usb mass storage support.
+  * Added source code for cdvd and sjpcm
+  * freesd is not used
+
+- PGEN v1.3 Release (TBA):
+
+  * Updated to recent libHdd, should fix problems with saved states disappearing
+  * Added freesd. rom0:LIBSD is no longer required, which means support for
+    old JAP consoles is back!
+  * Added umcdr. Now *anybody* can read their roms from a cdrom, if they have
+    a modchip or not!
+  * Default rom region is now based on console region, and not hardcoded
+
+- PGEN v1.2 Release (1/2/04):
+
+  * Fixed zipped rom support (this was as simple as downgrading compilers
+    from 3.2.2 back to 2.9)
+  * Fixed loading via swap disc, such as AR2
+
+- PGEN v1.1 Release (16/11/03):
+
+  * Just about all PS2 specific code re-written
+  * Started using gsLib for graphics
+  * Added scroll bar to romlist and Save Manager
+  * Added support for loading ROM's from the memory cards
+  * Added HDD support. Now possible to save/load states and 
+    options to the HDD, and load ROM's from the HDD
+  * CD refresh obsolete, removed
+  * Added support for zipped roms
+  * Filtering now available for rendering (hardware linear filtering)
+  * Saved states now use zlib for compression. Old saves are incompatible.
+  * Killed support for OLD JAP consoles (sorry :P)
+  * Fixed bug with FIFO empty (VDP control port) emulation. Fixes games
+    such as Wonderboy 5 and Splatterhouse 2.
+  * Added multitap support
+  * No longer load modules from cdrom, making it possible to boot
+    from a memory card via the PS2 Independence exploit
+  * Many other misc changes
+
+- PGEN BETA v1.0 Release (13/04/03):
+
+  * Jap console compatibility
+  * Removed crypto code (sjdata etc)
+  * Customisable music for menu screen
+  * Added "cd refresh" (press circle at romlist)
+  * Only display disclaimer on first use
+  * LOTS of small bugfixes
+
+- PGEN RC2 Release (02/08/02):
+
+  * Minor speed increase
+  * Fixed bug in pag code (you can now use an old PS1 digital controller)
+  * Fixed "red screen of death" bug (added checksum fixer)
+  * Added proper region emulation, improved region detection code
+  * Made selector loop in ingame menu and romlist
+  * Fixed FPS counter position with NTSC video mode
+  * Additions to the ingame menu: Soft reset, Region selection, Screen repositioning
+  * Now include screen position in saved options
+  * Spin down CD when not in use
+  * Added emulation of 6-button genesis controller
+  * Added support for subdirs inside the base rom directory
+  * Added shortcuts in romlist: L1 to move to top of list, L2 to move to bottom

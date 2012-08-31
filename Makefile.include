@@ -1,0 +1,39 @@
+
+PREFIX		= ee-
+AS		= $(PREFIX)gcc
+CC		= $(PREFIX)gcc
+CXX		= $(PREFIX)g++
+CPP		= $(PREFIX)cpp
+LD		= $(PREFIX)ld
+DVPASM		= $(PREFIX)dvp-as
+OBJDUMP		= $(PREFIX)objdump
+PS2LIB		= $(PS2DEV)/ps2sdk
+GSLIB_DIR	= ../lib/gslib051
+
+RM		= rm -f
+
+CFLAGS	+=	-D_EE -O3 -G0 -Wall -fshort-double -mlong64  \
+		-I. -I../cpu68k -I../gui -I../hdr -I../ps2 -I../lib -I../unzip -I../zlib \
+		-I../sound -I../z80 -I$(PS2LIB)/common/include -I$(PS2LIB)/ee/include \
+		-I$(GSLIB_DIR)/include 
+
+LIBS		= -lgs -lmtap -lhdd -lpoweroff
+LIBS		+= -lfileXio -lmc
+ifeq ($(NAPLINK),yes)
+CFLAGS		+= -DNAPLINK
+LIBS += -lpad
+else
+LIBS += -lpadx
+endif
+LIBS += -lm  -lpatches -lc -lkernel -lc -lkernel
+
+LDFLAGS +=	-L./lib/gslib051/lib  -L$(PS2LIB)/ee/lib #-L$(GSLIB_DIR)/lib
+
+%.o : %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+%.o : %.s
+	$(AS) $(CFLAGS) -c $< -o $@
+
+%.o : %.cpp
+	$(CXX) $(CFLAGS) -c $< -o $@

@@ -1,0 +1,11 @@
+
+libsd_IMPORTS_start
+I_sceSdInit
+I_sceSdSetTransCallback
+I_sceSdSetParam
+I_sceSdGetParam
+I_sceSdSetCoreAttr
+I_sceSdBlockTrans
+I_sceSdBlockTransStatus
+libsd_IMPORTS_end
+
