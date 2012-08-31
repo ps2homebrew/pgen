@@ -1,6 +1,7 @@
 /* Generator is (c) James Ponder, 1997-2001 http://www.squish.net/generator/ */
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "generator.h"
 
@@ -920,10 +921,7 @@ void generate(FILE *output, int topnibble)
         OUT("  uint16 precalc = dstdata + srcdata + XFLAG;\n");
         OUT("  uint16 outdata_tmp = precalc;\n");
         OUT("\n");
-        OUT("  if (outdata_low > 0x09)\n");
-        OUT("    outdata_tmp+= 0x06;\n");
-        //OUT("  if (outdata_tmp > 0x90) {\n");
-        OUT("  if (outdata_tmp >= 0xa0) {\n"); // bootsector@10-Jan-2007
+        OUT("  if (outdata_tmp > 0x99) {\n");
         OUT("    outdata_tmp+= 0x60;\n");
 	if (flags && iib->flags.set & IIB_FLAG_C)
 	  OUT("    CFLAG = 1;\n");
@@ -935,6 +933,8 @@ void generate(FILE *output, int topnibble)
 	if (flags && iib->flags.set & IIB_FLAG_X)
 	  OUT("    XFLAG = 0;\n");
 	OUT("  }\n");
+        OUT("  if (outdata_low > 0x09)\n");
+        OUT("    outdata_tmp+= 0x06;\n");
         OUT("  outdata = outdata_tmp;\n");
 	if (flags && iib->flags.set & IIB_FLAG_Z)
 	  OUT("  if (outdata) ZFLAG = 0;\n");
@@ -946,6 +946,7 @@ void generate(FILE *output, int topnibble)
 	break;
 
       case i_SBCD:
+        /* on real 68000: 0x10 - 0x0b - 0 = 0xff */
 	generate_ea(output, iib, tp_src, 1);
 	generate_eaval(output, iib, tp_src);
 	generate_ea(output, iib, tp_dst, 1);
@@ -957,10 +958,17 @@ void generate(FILE *output, int topnibble)
         OUT("  sint16 precalc = dstdata - srcdata - XFLAG;\n");
         OUT("  sint16 outdata_tmp = precalc;\n");
         OUT("\n");
+        OUT("  if (outdata_tmp < 0) {\n");
+        OUT("    outdata_tmp-= 0x60;\n");
+	if (flags && iib->flags.set & IIB_FLAG_N)
+          OUT("    NFLAG = 1;\n");
+        OUT("  } else {\n");
+	if (flags && iib->flags.set & IIB_FLAG_N)
+          OUT("    NFLAG = 0;\n");
+        OUT("  }\n");
         OUT("  if (outdata_low < 0)\n");
         OUT("    outdata_tmp-= 0x06;\n");
         OUT("  if (outdata_tmp < 0) {\n");
-        OUT("    outdata_tmp-= 0x60;\n");
 	if (flags && iib->flags.set & IIB_FLAG_C)
 	  OUT("    CFLAG = 1;\n");
 	if (flags && iib->flags.set & IIB_FLAG_X)
@@ -974,8 +982,6 @@ void generate(FILE *output, int topnibble)
         OUT("  outdata = outdata_tmp;\n");
 	if (flags && iib->flags.set & IIB_FLAG_Z)
 	  OUT("  if (outdata) ZFLAG = 0;\n");
-	if (flags && iib->flags.set & IIB_FLAG_N)
-          generate_stdflag_n(output, iib);
 	if (flags && iib->flags.set & IIB_FLAG_V)
           OUT("  VFLAG = (precalc & 1<<7) && ((outdata & 1<<7) == 0);\n");
 	generate_eastore(output, iib, tp_dst);
@@ -1192,8 +1198,8 @@ void generate(FILE *output, int topnibble)
 	break;
 
       case i_RESET:
-		// According to Charles Mac Donald, on the Genesis RESET has no effect.
-//        OUT("  ui_err(\"RESET @ %x\", PC);\n");
+	  // According to Charles Mac Donald, on the Genesis RESET has no effect.
+//    OUT("  ui_err(\"Peripherals reset @ %x\", PC);\n");
 	break;
 
       case i_NOP:
@@ -1462,7 +1468,7 @@ void generate(FILE *output, int topnibble)
 	OUT("  remainder = dstdata % (sint16)srcdata;\n");
 	OUT("  if (((quotient & 0xffff8000) == 0) ||\n");
 	OUT("      ((quotient & 0xffff8000) == 0xffff8000)) {\n");
-	OUT("    if ((quotient < 0) != (remainder < 0))\n");
+	OUT("    if ((dstdata < 0) != (remainder < 0))\n");
 	OUT("      remainder = -remainder;\n");
 	OUT("    DATAREG(dstreg) = ((uint16)quotient) | ");
 	OUT("(((uint16)(remainder))<<16);\n");
@@ -1492,40 +1498,40 @@ void generate(FILE *output, int topnibble)
 	generate_eaval(output, iib, tp_dst);
 	generate_bits(output, iib);
 	OUT("  uint8 count = srcdata & 63;\n");
-	switch (iib->size) {
-	case sz_byte:
-	  generate_outdata(output, iib, "((sint8)dstdata) >> "
-			   "(count > 7 ? 7 : count)");
-	  break;
-	case sz_word:
-	  generate_outdata(output, iib, "((sint16)dstdata) >> "
-			   "(count > 15 ? 15 : count)");
-	  break;
-	case sz_long:
-	  generate_outdata(output, iib, "((sint32)dstdata) >> "
-			   "(count > 31 ? 31 : count)");
-	  break;
-	default:
-	  OUT("ERROR size\n");
-	  break;
-	}
+        switch (iib->size) {
+        case sz_byte:
+          generate_outdata(output, iib, "((sint8)dstdata) >> "
+                           "(count > 7 ? 7 : count)");
+          break;
+        case sz_word:
+          generate_outdata(output, iib, "((sint16)dstdata) >> "
+                           "(count > 15 ? 15 : count)");
+          break;
+        case sz_long:
+          generate_outdata(output, iib, "((sint32)dstdata) >> "
+                           "(count > 31 ? 31 : count)");
+          break;
+        default:
+          OUT("ERROR size\n");
+          break;
+        }
 	OUT("\n");
 	generate_eastore(output, iib, tp_dst);
 	if (flags) {
 	  OUT("\n");
-	  OUT("  if (!srcdata)\n");
+	  OUT("  if (!count)\n");
 	  if (iib->flags.set & IIB_FLAG_C)
 	    OUT("    CFLAG = 0;\n");
-	  OUT("  else if (srcdata >= bits) {\n");
+          OUT("  else if (count >= bits) {\n");
 	  if (iib->flags.set & IIB_FLAG_C)
-	    OUT("    CFLAG = dstdata>>(bits-1);\n");
+	    OUT("    CFLAG = (dstdata >> (bits - 1)) & 1;\n");
 	  if (iib->flags.set & IIB_FLAG_X)
-	    OUT("    XFLAG = dstdata>>(bits-1);\n");
+	    OUT("    XFLAG = (dstdata >> (bits - 1)) & 1;\n");
 	  OUT("  } else {\n");
 	  if (iib->flags.set & IIB_FLAG_C)
-	    OUT("    CFLAG = dstdata>>(count-1) & 1;\n");
+	    OUT("    CFLAG = (dstdata >> (count - 1)) & 1;\n");
 	  if (iib->flags.set & IIB_FLAG_X)
-	    OUT("    XFLAG = dstdata>>(count-1) & 1;\n");
+	    OUT("    XFLAG = (dstdata >> (count - 1)) & 1;\n");
 	  OUT("  }\n");
 	  if (iib->flags.set & IIB_FLAG_V)
 	    generate_clrflag_v(output, iib);
@@ -1543,8 +1549,7 @@ void generate(FILE *output, int topnibble)
 	generate_eaval(output, iib, tp_dst);
 	generate_bits(output, iib);
 	OUT("  uint8 count = srcdata & 63;\n");
-	generate_outdata(output, iib,
-			 "dstdata >> (count > (bits-1) ? (bits-1) : count)");
+	generate_outdata(output, iib, "dstdata >> count");
 	OUT("\n");
 	generate_eastore(output, iib, tp_dst);
 	if (flags) {
@@ -1552,16 +1557,17 @@ void generate(FILE *output, int topnibble)
 	  OUT("  if (!count)\n");
 	  if (iib->flags.set & IIB_FLAG_C)
 	    OUT("    CFLAG = 0;\n");
-	  OUT("  else if (count >= bits) {\n");
+          OUT("  else if (count >= bits) {\n");
+          OUT("    outdata = 0;\n");
 	  if (iib->flags.set & IIB_FLAG_C)
-	    OUT("    CFLAG = (count == bits) ? dstdata>>(bits-1) : 0;\n");
+	    OUT("    CFLAG = (count == bits) ? (dstdata >> (bits - 1)) : 0;\n");
 	  if (iib->flags.set & IIB_FLAG_X)
-	    OUT("    XFLAG = (count == bits) ? dstdata>>(bits-1) : 0;\n");
+	    OUT("    XFLAG = (count == bits) ? (dstdata >> (bits - 1)) : 0;\n");
 	  OUT("  } else {\n");
 	  if (iib->flags.set & IIB_FLAG_C)
-	    OUT("    CFLAG = dstdata>>(count-1) & 1;\n");
+	    OUT("    CFLAG = (dstdata >> (count-1)) & 1;\n");
 	  if (iib->flags.set & IIB_FLAG_X)
-	    OUT("    XFLAG = dstdata>>(count-1) & 1;\n");
+	    OUT("    XFLAG = (dstdata >> (count-1)) & 1;\n");
 	  OUT("  }\n");
 	  if (iib->flags.set & IIB_FLAG_V)
 	    generate_clrflag_v(output, iib);
@@ -1585,21 +1591,23 @@ void generate(FILE *output, int topnibble)
 	generate_eastore(output, iib, tp_dst);
 	if (flags) {
 	  OUT("\n");
-	  OUT("  if (!count)\n");
+	  OUT("  if (!count) {\n");
 	  if (iib->flags.set & IIB_FLAG_C)
 	    OUT("    CFLAG = 0;\n");
-	  OUT("  else if (count >= bits) {\n");
-	  if (iib->flags.set & IIB_FLAG_C)
-	    OUT("    CFLAG = (count == bits) ? dstdata & 1 : 0;\n");
-	  if (iib->flags.set & IIB_FLAG_X)
-	    OUT("    XFLAG = (count == bits) ? dstdata & 1 : 0;\n");
 	  if (iib->flags.set & IIB_FLAG_V)
-	    OUT("    VFLAG = !dstdata;\n");
+	    OUT("    VFLAG = 0;\n");
+	  OUT("  } else if (count >= bits) {\n");
+	  if (iib->flags.set & IIB_FLAG_C)
+	    OUT("    CFLAG = (count == bits) ? (dstdata & 1) : 0;\n");
+	  if (iib->flags.set & IIB_FLAG_X)
+	    OUT("    XFLAG = (count == bits) ? (dstdata & 1) : 0;\n");
+	  if (iib->flags.set & IIB_FLAG_V)
+	    OUT("    VFLAG = dstdata ? 1 : 0;\n");
 	  OUT("  } else {\n");
 	  if (iib->flags.set & IIB_FLAG_C)
-	    OUT("    CFLAG = dstdata>>(bits-count) & 1;\n");
+	    OUT("    CFLAG = (dstdata >> (bits-count)) & 1;\n");
 	  if (iib->flags.set & IIB_FLAG_X)
-	    OUT("    XFLAG = dstdata>>(bits-count) & 1;\n");
+	    OUT("    XFLAG = (dstdata >> (bits-count)) & 1;\n");
 	  if (iib->flags.set & IIB_FLAG_V) {
 	    OUT("    {\n");
 	    switch (iib->size) {
@@ -1636,7 +1644,7 @@ void generate(FILE *output, int topnibble)
 	generate_bits(output, iib);
 	OUT("  uint8 count = srcdata & 63;\n");
 	generate_outdata(output, iib,
-			 "count >= bits ? 0 : (dstdata << count)");
+			 "(count >= bits) ? 0 : (dstdata << count)");
 	OUT("\n");
 	generate_eastore(output, iib, tp_dst);
 	if (flags) {
@@ -1646,14 +1654,14 @@ void generate(FILE *output, int topnibble)
 	    OUT("    CFLAG = 0;\n");
 	  OUT("  else if (count >= bits) {\n");
 	  if (iib->flags.set & IIB_FLAG_C)
-	    OUT("    CFLAG = (count == bits) ? dstdata & 1 : 0;\n");
+	    OUT("    CFLAG = (count == bits) ? (dstdata & 1) : 0;\n");
 	  if (iib->flags.set & IIB_FLAG_X)
-	    OUT("    XFLAG = (count == bits) ? dstdata & 1 : 0;\n");
+	    OUT("    XFLAG = (count == bits) ? (dstdata & 1) : 0;\n");
 	  OUT("  } else {\n");
 	  if (iib->flags.set & IIB_FLAG_C)
-	    OUT("    CFLAG = dstdata>>(bits-count) & 1;\n");
+	    OUT("    CFLAG = (dstdata >> (bits-count)) & 1;\n");
 	  if (iib->flags.set & IIB_FLAG_X)
-	    OUT("    XFLAG = dstdata>>(bits-count) & 1;\n");
+	    OUT("    XFLAG = (dstdata >> (bits-count)) & 1;\n");
 	  OUT("  }\n");
 	  if (iib->flags.set & IIB_FLAG_V)
 	    generate_clrflag_v(output, iib);
@@ -1765,7 +1773,7 @@ void generate(FILE *output, int topnibble)
 	break;
 
       case i_ILLG:
-        OUT("  ui_err(\"Illegal instruction @ %x\", PC);\n");
+        OUT("  ui_err(\"The ILLEGAL instruction encountered @ %x\", PC);\n");
 	break;
 
       } /* switch */

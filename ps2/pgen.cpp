@@ -154,9 +154,9 @@ void initialise()
 	initMods();
 	playNextMod();
 
-	loadHddModules();   //Uncommented line for HDD read support. AKuHAK    
-	//hddPreparePoweroff(); 				I had to comment out these lines for the elf to load.  
-	//hddSetUserPoweroffCallback(powerOffCallback, NULL); 	It might be a problemwith my sdk setup. aries2k
+	loadHddModules();
+	hddPreparePoweroff();
+	hddSetUserPoweroffCallback(powerOffCallback, NULL);
 
 	// Setup default region settings (will be over-written if a config file is found)
 	if(GS_TV_AUTO == GS_TV_NTSC)
