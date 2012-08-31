@@ -118,14 +118,16 @@ void guiDrawScroll()
 	// (sorry, when I first designed the PGEN gui I thought NTSC could display 240 vertical
 	// lines - I later found out it was only 224. Dont wanna re-design the whole thing just
 	// because of this small issue ;)
+	int dif=0;
 	if(pgenRuntimeSetting.guiVideoMode != GS_TV_PAL)
-		return;
+		dif=0;
+//		return;
 
 	// HACK: scrollX = 310 instead of 320, as it seems to fix weird bug
 	// (during first ~1 second of scroller, text would fux0r)
 	static int scrollX = 310, scrollDelay = 1, inited = 0, scrollLength = 0;
-	static char scrollerString[] = "    PGEN 1.5.1s by bootsector and others (see credits)"
-	"new music and background by samson of ps3hax ps3 drivers by aries2k of ps3hax... www.haxnetwork.net";
+	static char scrollerString[] = "    PGEN 1.5.1s by Sjeep and others (see credits)"
+	"readapted by AKuHAK";
 
 	if(!inited)
 	{
@@ -135,7 +137,7 @@ void guiDrawScroll()
 		inited = 1;
 	}
 
-	zerohourFont.Print(scrollX, 336, 224, Z_SCROLL, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80), 
+	zerohourFont.Print(scrollX, 336, 224-dif, Z_SCROLL, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80), 
 		GSFONT_ALIGN_LEFT, scrollerString);
 
 	if(--scrollDelay < 0)
@@ -153,17 +155,17 @@ void guiDrawScroll()
 		dispDriver->getTexSizeFromInt(pgenTexEnv.pgenBG.height), 
 		pgenTexEnv.pgenBG.psm, 0, 0, 0, 0);
 
-	drawPipe->RectTexture(0, 220, 0, 220, 10, 240, 10, 240, Z_SCROLL_M, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80));
-	drawPipe->TriStripGouraudTexture(	10, 220, Z_SCROLL_M, 10, 220, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80),
-										40, 220, Z_SCROLL_M, 40, 220, GS_SET_RGBA(0x80, 0x80, 0x80, 0x00),
-										10, 240, Z_SCROLL_M, 10, 240, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80),
-										40, 240, Z_SCROLL_M, 40, 240, GS_SET_RGBA(0x80, 0x80, 0x80, 0x00));
+	drawPipe->RectTexture(0, 220-dif, 0, 220-dif, 10, 240-dif, 10, 240-dif, Z_SCROLL_M, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80));
+	drawPipe->TriStripGouraudTexture(	10, 220-dif, Z_SCROLL_M, 10, 220-dif, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80),
+										40, 220-dif, Z_SCROLL_M, 40, 220-dif, GS_SET_RGBA(0x80, 0x80, 0x80, 0x00),
+										10, 240-dif, Z_SCROLL_M, 10, 240-dif, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80),
+										40, 240-dif, Z_SCROLL_M, 40, 240-dif, GS_SET_RGBA(0x80, 0x80, 0x80, 0x00));
 
-	drawPipe->RectTexture(310, 220, 310, 220, 320, 240, 320, 240, Z_SCROLL_M, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80));
-	drawPipe->TriStripGouraudTexture(	280, 220, Z_SCROLL_M, 280, 220, GS_SET_RGBA(0x80, 0x80, 0x80, 0x00),
-										310, 220, Z_SCROLL_M, 310, 220, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80),
-										280, 240, Z_SCROLL_M, 280, 240, GS_SET_RGBA(0x80, 0x80, 0x80, 0x00),
-										310, 240, Z_SCROLL_M, 310, 240, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80));
+	drawPipe->RectTexture(310, 220-dif, 310, 220-dif, 320, 240-dif, 320, 240-dif, Z_SCROLL_M, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80));
+	drawPipe->TriStripGouraudTexture(	280, 220-dif, Z_SCROLL_M, 280, 220-dif, GS_SET_RGBA(0x80, 0x80, 0x80, 0x00),
+										310, 220-dif, Z_SCROLL_M, 310, 220-dif, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80),
+										280, 240-dif, Z_SCROLL_M, 280, 240-dif, GS_SET_RGBA(0x80, 0x80, 0x80, 0x00),
+										310, 240-dif, Z_SCROLL_M, 310, 240-dif, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80));
 }
 
 void guiUpdateScreen()

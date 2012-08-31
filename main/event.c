@@ -239,7 +239,7 @@ void event_freeze(unsigned int bytes)
     clocks = vdp_event_end - cpu68k_clocks;
     if (clocks < 0)
       clocks = 0;
-    percent_possible = clocks / vdp_clksperline_68k;
+    percent_possible = clocks / (vdp_clksperline_68k);
     if (vdp_reg[1] & 1 << 6 && !vdp_vblank) {
       /* vdp active */
       possible = (unsigned int)(percent_possible * (wide ? 18 : 16));

@@ -129,6 +129,8 @@ void vdp_setupvideo(void)
   vdp_totlines = vdp_pal ? 313 : 262;
   vdp_framerate = vdp_pal ? 50 : 60;
   vdp_clksperline_68k = (vdp_68kclock / vdp_framerate / vdp_totlines);
+  //vdp_clksperline = 3420;
+  //vdp_framerate = (vdp_clock / vdp_clksperline / vdp_totlines);
 }
 
 /*** vdp_softreset - soft reset ***/

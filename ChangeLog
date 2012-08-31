@@ -1,3 +1,8 @@
+-16/08/12
+  * minor updates in vdp modules
+  * now POWER button works fine (thanks to SP193)
+  * scroll bar now work in NTSC mode
+
 - 12/08/12
   * zlib modules updated to 1.2.3 (taken from ps2sdk)
     Now memory card saving works fine :)
