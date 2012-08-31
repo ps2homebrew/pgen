@@ -1,3 +1,13 @@
+- 18/07/12
+  * sources updated to Generator 0.36 (2007.02.26)
+  * almost all *.irx from ps2sdk
+  * poweroff.irx replaced with ps2sdk cause old was buggy
+  * added ps2-packer support
+  * more flexible option for music support. Now you can free
+    up your /data folder for reducing final ELF size. At least
+    one *.mod file must be present
+  * now mod files zipped without comression for better ps2-packer work
+
 - PGEN v1.5.1t Release (17/07/12):
   * Updated to latest PS2SDK
   * Better -clean command by AKuHAK

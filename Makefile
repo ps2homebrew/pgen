@@ -16,9 +16,10 @@ $(PROJECT).elf: clean-build make-dirs
 	$(CXX) $(LDFLAGS) -o $(PROJECT).elf -T$(PS2SDK)/ee/startup/linkfile $(OBJECTS) $(LIBS)
 	ee-strip --strip-all $(PROJECT).elf
 #	sjcrunch $(PROJECT).elf $(PROJECT)-crunched.elf
+	ps2-packer $(PROJECT).elf $(PROJECT)-crunched.elf > /dev/null
 
 clean-build:
-	rm -f build/*.o $(PROJECT).elf
+	rm -f build/*.o *.elf
 
 make-dirs:
 	$(MAKE) -C z80
