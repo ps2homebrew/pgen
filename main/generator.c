@@ -1,7 +1,7 @@
 /* Generator is (c) James Ponder, 1997-2001 http://www.squish.net/generator/ */
 
 #include <tamtypes.h>
-#include <string.h>
+//#include <string.h>
 #include <malloc.h>
 #include "generator.h"
 #include "ctype.h"
@@ -25,6 +25,7 @@ unsigned int gen_debugmode = 0;
 unsigned int gen_loglevel = 0;  /* 2 = NORMAL, 1 = CRITICAL */
 unsigned int gen_autodetect = 1; /* 0 = no, 1 = yes */
 unsigned int gen_musiclog = 0; /* 0 = no, 1 = GYM, 2 = GNM */
+unsigned int gen_modifiedrom = 0; /* 0 = no, 1 = yes */
 t_cartinfo gen_cartinfo;
 char gen_leafname[128];
 
@@ -80,6 +81,7 @@ void gen_reset(void)
   mem68k_init(); // needed to disable sram if game does not support it
   vdp_reset();
   cpu68k_reset();
+  cpu68k_ram_clear();
   cpuz80_reset();
   if (sound_reset()) {
     ui_err("sound failure");
@@ -101,7 +103,7 @@ void gen_softreset(void)
 /*
 void gen_loadmemrom(const char *rom, int romlen)
 {
-  cpu68k_rom = (char *)rom; // I won't alter it, promise
+  cpu68k_rom = deconstify_void_ptr(rom); // I won't alter it, promise
   cpu68k_romlen = romlen;
   gen_freerom = 0;
   gen_setupcartinfo();
@@ -132,6 +134,13 @@ void gen_setupcartinfo(void)
   gen_cartinfo.checksum = gen_checksum(((uint8 *)cpu68k_rom) + 0x200,
                                        cpu68k_romlen - 0x200);
   gen_nicetext(gen_cartinfo.memo, (char *)(cpu68k_rom + 0x1C8), 28);
+
+  /*
+   * For more info, go here:
+   * http://www.genesiscollective.com/faq.php?myfaq=yes&id_cat=2&categories=Game+Cartridge+And+ROM+Questions
+   *  -Trilkk
+   */
+
   for (i = 0x1f0; i < 0x1ff; i++) {
     if (cpu68k_rom[i] == 'J')
       gen_cartinfo.flag_japan = 1;
@@ -148,6 +157,16 @@ void gen_setupcartinfo(void)
 	if (cpu68k_rom[i] == '8')
 	  gen_cartinfo.flag_europe = 1;
   }
+
+  /*
+   * FIXME: Please note that 'E' is used on bot old and new region standard.
+   * This might cause some serious trouble for old games that the emulator
+   * would think to be usable in other configurations than pal-e. Thus, we
+   * should somehow check for the year of the game, and do the following test
+   * only if it is post-1994. Other way around is not dangerous, since 'E'
+   * contains europe anyway.
+   */
+
   if (cpu68k_rom[0x1f0] >= '1' && cpu68k_rom[0x1f0] <= '9') {
     gen_cartinfo.hardware = cpu68k_rom[0x1f0] - '0';
   } else if (cpu68k_rom[0x1f0] >= 'A' && cpu68k_rom[0x1f0] <= 'F') {
@@ -219,7 +238,7 @@ void gen_nicetext(char *out, char *in, unsigned int size)
 
   flag = 0;                     /* set if within word, e.g. make lowercase */
   i = size;                     /* maximum number of chars in input */
-  while ((c = *in++) && --i > 0) {
+  while ((c = *(unsigned char *)in++) && --i > 0) {
     if (isalpha(c)) {
       if (!flag) {
         /* make uppercase */
@@ -244,7 +263,7 @@ void gen_nicetext(char *out, char *in, unsigned int size)
       *out++ = c;
     }
   }
-  while (out > start && out[-1] == ' ')
+  while (out > start && ' ' == *(out - 1))
     out--;
   *out++ = '\0';
 }
@@ -257,7 +276,7 @@ uint16 gen_checksum(uint8 *start, unsigned int length)
 
   if (length & 1) {
     length &= ~1;
-    LOG_CRITICAL(("checksum routines given odd length (%d)", length));
+    LOG_VERBOSE(("checksum routines given odd length (%d)", length));
   }
 
   for (; length; length -= 2, start += 2) {
@@ -454,6 +473,8 @@ char *gen_loadimage(char *filename)
   LOG_REQUEST(("Loaded '%s'/'%s' (%s %04X %s)", gen_cartinfo.name_domestic,
                gen_cartinfo.name_overseas, gen_cartinfo.version,
                gen_cartinfo.checksum, gen_cartinfo.country));
+
+  gen_modifiedrom = 0;
 
 */
   return NULL;

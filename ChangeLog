@@ -1,8 +1,16 @@
+- 12/08/12
+  * zlib modules updated to 1.2.3 (taken from ps2sdk)
+    Now memory card saving works fine :)
+  * Change background picture (thanks to retro)
+  * generator.c updated into last from cbiere
+  * render.c updated into last from dGen
+
 - 03/08/12
   * sound modules updated to last gens
   * added suppport for *.gen file extension
   * added exit menu button (which shut doen console)
-  * code parts updated to last cbiere-v4 generator sources (except generator.cpp and generator.h)
+  * code parts updated to last cbiere-v4 generator sources
+    (except generator.cpp and generator.h)
   * Multitap autodetect shanged into 2nd port (not tested)
   * Now using older ps2hdd related IRX modules for HDD support
   * HDD folder changed to "PP.GEN"
@@ -26,7 +34,8 @@
   * The new ps3 look and music was done by Samson from ps3hax.
   * The modifications for the ps3 were done by aries2k
   * This version doesnŽt support hdd
-  * All references to naplink were removedThe SifIopReset sequence was removed and replaced with the one from uLaunch.elf by E.P and dlanor
+  * All references to naplink were removedThe SifIopReset sequence
+    was removed and replaced with the one from uLaunch.elf by E.P and dlanor
   * All necessary .Irx modules (100% homebrew) have been embedded in the elf 
 
 - PGEN v1.5.1 Release (18/03/07):
