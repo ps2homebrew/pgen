@@ -138,7 +138,7 @@ void guiRomlist::update(u32 padRepeat, u32 padNoRepeat)
 					if(strstr(sortedList[selection]->fileName, "cdfs:"))
 						currentAIO = new cdvdIO(2048);
 					// Trying to mount HDD partition
-					else if (strcmp(sortedList[selection]->fileName, "hdd0:PP.GEN") == 0)
+					else if (strcmp(sortedList[selection]->fileName, "hdd0:PP.P-GEN") == 0)
 						currentAIO = saverHddAIO;
 					else if(strstr(sortedList[selection]->fileName, "hdd0:"))
 						currentAIO = new hddIO(sortedList[selection]->fileName);

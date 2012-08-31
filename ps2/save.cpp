@@ -96,7 +96,7 @@ int hddSaver::checkSaveExist()
 {
 	if(!exists)
 	{
-		int fd = fileXioOpen("hdd0:PP.GEN", O_RDONLY, 0);
+		int fd = fileXioOpen("hdd0:PP.P-GEN", O_RDONLY, 0);
 		if(fd < 0)
 			return 0;
 		else
@@ -112,18 +112,18 @@ int hddSaver::checkSaveExist()
 
 int hddSaver::createSave()
 {
-	int fd = fileXioOpen("hdd0:PP.GEN,128M", O_WRONLY | O_RDWR | O_CREAT | O_TRUNC, 0);
+	int fd = fileXioOpen("hdd0:PP.P-GEN,128M", O_WRONLY | O_RDWR | O_CREAT | O_TRUNC, 0);
 	if(fd < 0)
 		return -1;
 
 	fileXioClose(fd);
 
 	int zoneSize = 8192;
-	int rv = fileXioFormat("pfs0:", "hdd0:PP.GEN", (const char*)&zoneSize, sizeof(int));
+	int rv = fileXioFormat("pfs0:", "hdd0:PP.P-GEN", (const char*)&zoneSize, sizeof(int));
 	if(rv < 0)
 		return -1;
 
-	rv = fileXioMount("pfs2:", "hdd0:PP.GEN", FIO_MT_RDWR);
+	rv = fileXioMount("pfs2:", "hdd0:PP.P-GEN", FIO_MT_RDWR);
 	if(rv < 0)
 		return -1;
 
@@ -140,7 +140,7 @@ int hddSaver::createSave()
 	fileXioUmount("pfs2:");
 
 	delete(saverAIO);
-	saverAIO = new hddIO("hdd0:PP.GEN");
+	saverAIO = new hddIO("hdd0:PP.P-GEN");
 	exists = 1;
 
 	return 0;

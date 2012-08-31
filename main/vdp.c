@@ -121,12 +121,12 @@ void vdp_setupvideo(void)
     ui_err("Impossible VDP mode - vertical 30 cell NTSC");
 
   /* What speed is the PAL clock? */
-  vdp_clock = vdp_pal ? 53200000 : 53693100;
+  vdp_clock = vdp_pal ? 53203424 : 53693175;
   vdp_68kclock = vdp_clock / 7;
   vdp_vislines = v30 ? 240 : 224;
   vdp_visstartline = v30 ? 46 : (vdp_pal ? 54 : 19);
   vdp_visendline = vdp_visstartline + vdp_vislines;
-  vdp_totlines = vdp_pal ? 312 : 262;
+  vdp_totlines = vdp_pal ? 313 : 262;
   vdp_framerate = vdp_pal ? 50 : 60;
   vdp_clksperline_68k = (vdp_68kclock / vdp_framerate / vdp_totlines);
 }
