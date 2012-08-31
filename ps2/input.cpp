@@ -99,18 +99,18 @@ int padManager::updateInput()
 
 void initPads()
 {
-#if 0 // XXX: multitap disabled!
+//#if 0 // XXX: multitap disabled!
 	// Check for a multi-tap
 	mtapPortOpen(0);
 	if(mtapGetConnection(0) == 1)
 		pgenRuntimeSetting.multiTapConnected = 1;
 	else {
-#endif
+//#endif
 		pgenRuntimeSetting.multiTapConnected = 0;
-#if 0 // XXX: multitap disabled!
+//#if 0 // XXX: multitap disabled!
 		mtapPortClose(0);
 	}
-#endif
+//#endif
 	
 	// Create padManager objects
 	pads[0] = new ingamePadManager(0, 0, &mem68k_cont.cont1[0]);	// Pad 1A

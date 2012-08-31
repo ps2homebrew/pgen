@@ -1,13 +1,14 @@
-/***************************************************************/
-/*                                                             */
-/* PSG.C : SN76489 emulator                                    */
-/*                                                             */
-/* Noise define constantes taken from MAME                     */
-/*                                                             */
-/* This source is a part of Gens project (gens@consolemul.com) */
-/* Copyright (c) 2002 by Stéphane Dallongeville                */
-/*                                                             */
-/***************************************************************/
+/***********************************************************/
+/*                                                         */
+/* PSG.C : SN76489 emulator                                */
+/*                                                         */
+/* Noise define constantes taken from MAME                 */
+/*                                                         */
+/* This source is a part of Gens project                   */
+/* Written by Stéphane Dallongeville (gens@consolemul.com) */
+/* Copyright (c) 2002 by Stéphane Dallongeville            */
+/*                                                         */
+/***********************************************************/
 
 #include <math.h>
 #include <string.h>
@@ -22,11 +23,11 @@
 
 // Change MAX_OUTPUT to change PSG volume (default = 0x7FFF)
 
-#define MAX_OUTPUT 0x5FFF
+#define MAX_OUTPUT 0x4FFF
 
 #define W_NOISE 0x12000
 #define P_NOISE 0x08000
-#define NOISE_DEF 0x0f35
+#define NOISE_DEF 0x4000
 
 
 /* Variables */
@@ -201,7 +202,7 @@ void PSG_Update(int **buffer, int length)
 	}
 
 	// Channel 3 - Noise
-
+	
 	if (cur_vol = PSG.Volume[3])
 	{
 		cur_cnt = PSG.Counter[3];
@@ -238,33 +239,33 @@ void PSG_Update(int **buffer, int length)
 void PSG_Init(int clock, int rate)
 {
 	int i, j;
-	float out;
+	double out;
 
 	for(i = 1; i < 1024; i++)
 	{
 		// Step calculation
 
-		out = (float) (clock) / (float) (i << 4);		// out = frequency
-		out /= (float) (rate);
+		out = (double) (clock) / (double) (i << 4);		// out = frequency
+		out /= (double) (rate);
 		out *= 65536.0;
 
 		PSG_Step_Table[i] = (unsigned int) out;
 	}
 
 	PSG_Step_Table[0] = PSG_Step_Table[1];
-
+		
 	for(i = 0; i < 3; i++)
 	{
-		out = (float) (clock) / (float) (1 << (9 + i));
-		out /= (float) (rate);
+		out = (double) (clock) / (double) (1 << (9 + i));
+		out /= (double) (rate);
 		out *= 65536.0;
-
+			
 		PSG_Noise_Step_Table[i] = (unsigned int) out;
 	}
 
 	PSG_Noise_Step_Table[3] = 0;
 
-	out = (float) MAX_OUTPUT / 3.0;
+	out = (double) MAX_OUTPUT / 3.0;
 
 	for (i = 0; i < 15; i++)
 	{
@@ -274,13 +275,34 @@ void PSG_Init(int clock, int rate)
 
 	PSG_Volume_Table[15] = 0;
 
-	for(i = 0; i < 512; i++)
+/*
+	for(i = 0; i < 256; i++)
 	{
-		out = sinf((2.0 * PI) * ((float) (i) / 512));
+		out = (i + 1.0) / 256.0;
 
 		for(j = 0; j < 16; j++)
 		{
-			PSG_SIN_Table[j][i] = (unsigned int) (out * (float) PSG_Volume_Table[j]);
+			PSG_SIN_Table[j][i] = (unsigned int) (out * (double) PSG_Volume_Table[j]);
+		}
+	}
+
+	for(i = 0; i < 256; i++)
+	{
+		out = 1.0 - ((i + 1.0) / 256.0);
+
+		for(j = 0; j < 16; j++)
+		{
+			PSG_SIN_Table[j][i + 256] = (unsigned int) (out * (double) PSG_Volume_Table[j]);
+		}
+	}
+*/
+	for(i = 0; i < 512; i++)
+	{
+		out = sinf((2.0 * PI) * ((double) (i) / 512));
+
+		for(j = 0; j < 16; j++)
+		{
+			PSG_SIN_Table[j][i] = (unsigned int) (out * (double) PSG_Volume_Table[j]);
 		}
 	}
 

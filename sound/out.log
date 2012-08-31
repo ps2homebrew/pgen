@@ -1,0 +1,86 @@
+ee-gcc -D_EE -O3 -G0 -Wall -fshort-double -mlong64 -I. -I../cpu68k -I../gui -I../hdr -I../ps2 -I../lib -I../unzip -I../zlib -I../sound -I../z80 -I/usr/local/ps2dev/ps2sdk/common/include -I/usr/local/ps2dev/ps2sdk/ee/include -I../lib/gslib051/include -I/include -I/usr/local/ps2dev/ps2sdk-ports/ode/include/ode -I/usr/local/ps2dev/ps2sdk-ports/ode/include -c ym2612.c -o ym2612.o
+In file included from ym2612.c:13:
+/usr/local/ps2dev/ps2sdk/ee/include/string.h:30: warning: conflicting types for built-in function `memcpy'
+/usr/local/ps2dev/ps2sdk/ee/include/string.h:32: warning: conflicting types for built-in function `memset'
+/usr/local/ps2dev/ps2sdk/ee/include/string.h:34: warning: conflicting types for built-in function `memcmp'
+/usr/local/ps2dev/ps2sdk/ee/include/string.h:37: warning: conflicting types for built-in function `strncmp'
+/usr/local/ps2dev/ps2sdk/ee/include/string.h:46: warning: conflicting types for built-in function `strncat'
+/usr/local/ps2dev/ps2sdk/ee/include/string.h:47: warning: conflicting types for built-in function `strncpy'
+/usr/local/ps2dev/ps2sdk/ee/include/string.h:50: warning: conflicting types for built-in function `strspn'
+/usr/local/ps2dev/ps2sdk/ee/include/string.h:51: warning: conflicting types for built-in function `strcspn'
+ym2612.c:131: warning: initialization from incompatible pointer type
+ym2612.c:132: warning: initialization from incompatible pointer type
+ym2612.c:133: warning: initialization from incompatible pointer type
+ym2612.c:134: warning: initialization from incompatible pointer type
+ym2612.c:135: warning: initialization from incompatible pointer type
+ym2612.c:136: warning: initialization from incompatible pointer type
+ym2612.c:137: warning: initialization from incompatible pointer type
+ym2612.c:138: warning: initialization from incompatible pointer type
+ym2612.c:140: warning: initialization from incompatible pointer type
+ym2612.c:141: warning: initialization from incompatible pointer type
+ym2612.c:142: warning: initialization from incompatible pointer type
+ym2612.c:143: warning: initialization from incompatible pointer type
+ym2612.c:144: warning: initialization from incompatible pointer type
+ym2612.c:145: warning: initialization from incompatible pointer type
+ym2612.c:146: warning: initialization from incompatible pointer type
+ym2612.c:147: warning: initialization from incompatible pointer type
+ym2612.c:149: warning: initialization from incompatible pointer type
+ym2612.c:150: warning: initialization from incompatible pointer type
+ym2612.c:151: warning: initialization from incompatible pointer type
+ym2612.c:152: warning: initialization from incompatible pointer type
+ym2612.c:153: warning: initialization from incompatible pointer type
+ym2612.c:154: warning: initialization from incompatible pointer type
+ym2612.c:155: warning: initialization from incompatible pointer type
+ym2612.c:156: warning: initialization from incompatible pointer type
+ym2612.c:158: warning: initialization from incompatible pointer type
+ym2612.c:159: warning: initialization from incompatible pointer type
+ym2612.c:160: warning: initialization from incompatible pointer type
+ym2612.c:161: warning: initialization from incompatible pointer type
+ym2612.c:162: warning: initialization from incompatible pointer type
+ym2612.c:163: warning: initialization from incompatible pointer type
+ym2612.c:164: warning: initialization from incompatible pointer type
+ym2612.c:166: warning: initialization from incompatible pointer type
+ym2612.c:170: warning: initialization from incompatible pointer type
+ym2612.c:171: warning: initialization from incompatible pointer type
+ym2612.c:172: warning: initialization from incompatible pointer type
+ym2612.c:173: warning: initialization from incompatible pointer type
+ym2612.c:174: warning: initialization from incompatible pointer type
+ym2612.c:175: warning: initialization from incompatible pointer type
+ym2612.c:176: warning: initialization from incompatible pointer type
+ym2612.c:178: warning: initialization from incompatible pointer type
+ym2612.c: In function `SLOT_SET':
+ym2612.c:344: warning: suggest parentheses around assignment used as truth value
+ym2612.c:376: warning: suggest parentheses around assignment used as truth value
+ym2612.c: In function `Update_Chan_Algo0_LFO':
+ym2612.c:991: warning: suggest parentheses around assignment used as truth value
+ym2612.c: In function `Update_Chan_Algo1_LFO':
+ym2612.c:1008: warning: suggest parentheses around assignment used as truth value
+ym2612.c: In function `Update_Chan_Algo2_LFO':
+ym2612.c:1025: warning: suggest parentheses around assignment used as truth value
+ym2612.c: In function `Update_Chan_Algo3_LFO':
+ym2612.c:1042: warning: suggest parentheses around assignment used as truth value
+ym2612.c: In function `Update_Chan_Algo4_LFO':
+ym2612.c:1059: warning: suggest parentheses around assignment used as truth value
+ym2612.c: In function `Update_Chan_Algo5_LFO':
+ym2612.c:1076: warning: suggest parentheses around assignment used as truth value
+ym2612.c: In function `Update_Chan_Algo6_LFO':
+ym2612.c:1093: warning: suggest parentheses around assignment used as truth value
+ym2612.c: In function `Update_Chan_Algo7_LFO':
+ym2612.c:1110: warning: suggest parentheses around assignment used as truth value
+ym2612.c: In function `Update_Chan_Algo0_LFO_Int':
+ym2612.c:1286: warning: suggest parentheses around assignment used as truth value
+ym2612.c: In function `Update_Chan_Algo1_LFO_Int':
+ym2612.c:1305: warning: suggest parentheses around assignment used as truth value
+ym2612.c: In function `Update_Chan_Algo2_LFO_Int':
+ym2612.c:1324: warning: suggest parentheses around assignment used as truth value
+ym2612.c: In function `Update_Chan_Algo3_LFO_Int':
+ym2612.c:1343: warning: suggest parentheses around assignment used as truth value
+ym2612.c: In function `Update_Chan_Algo4_LFO_Int':
+ym2612.c:1362: warning: suggest parentheses around assignment used as truth value
+ym2612.c: In function `Update_Chan_Algo5_LFO_Int':
+ym2612.c:1381: warning: suggest parentheses around assignment used as truth value
+ym2612.c: In function `Update_Chan_Algo6_LFO_Int':
+ym2612.c:1400: warning: suggest parentheses around assignment used as truth value
+ym2612.c: In function `Update_Chan_Algo7_LFO_Int':
+ym2612.c:1419: warning: suggest parentheses around assignment used as truth value
+cp -f psg.o ym2612.o ../build/
