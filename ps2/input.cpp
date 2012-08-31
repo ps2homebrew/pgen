@@ -100,27 +100,27 @@ int padManager::updateInput()
 void initPads()
 {
 //#if 0 // XXX: multitap disabled!
-	// Check for a multi-tap
-	mtapPortOpen(0);
-	if(mtapGetConnection(0) == 1)
+	// Check for a multi-tap in second port
+	mtapPortOpen(1);
+	if(mtapGetConnection(1) == 1)
 		pgenRuntimeSetting.multiTapConnected = 1;
 	else {
 //#endif
 		pgenRuntimeSetting.multiTapConnected = 0;
 //#if 0 // XXX: multitap disabled!
-		mtapPortClose(0);
+		mtapPortClose(1);
 	}
 //#endif
 	
 	// Create padManager objects
-	pads[0] = new ingamePadManager(0, 0, &mem68k_cont.cont1[0]);	// Pad 1A
-	pads[1] = new ingamePadManager(1, 0, &mem68k_cont.cont2[0]);	// Pad 2
+	pads[0] = new ingamePadManager(0, 0, &mem68k_cont.cont1[0]);	// Pad 1
+	pads[1] = new ingamePadManager(1, 0, &mem68k_cont.cont2[0]);	// Pad 2A
 
 	if(pgenRuntimeSetting.multiTapConnected)
 	{
-		pads[2] = new ingamePadManager(0, 1, &mem68k_cont.cont1[1]);	// Pad 1B
-		pads[3] = new ingamePadManager(0, 2, &mem68k_cont.cont1[2]);	// Pad 1C
-		pads[4] = new ingamePadManager(0, 3, &mem68k_cont.cont1[3]);	// Pad 1D
+		pads[2] = new ingamePadManager(1, 1, &mem68k_cont.cont2[1]);	// Pad 2B
+		pads[3] = new ingamePadManager(1, 2, &mem68k_cont.cont2[2]);	// Pad 2C
+		pads[4] = new ingamePadManager(1, 3, &mem68k_cont.cont2[3]);	// Pad 2D
 	}
 
 	guiPad = pads[0];

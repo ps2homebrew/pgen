@@ -122,7 +122,7 @@ int pgenEmuState::saveState()
 		sprintf(openFilename, "%s/%s", currentSaver->savePath, stateFilename);
 
 	int outSize = compressedSize + sizeof(saveBuffer.header);
-	int fd = currentSaver->saverAIO->open(openFilename, O_RDWR | O_CREAT | O_TRUNC);
+	int fd = currentSaver->saverAIO->open(openFilename, O_WRONLY | O_RDWR | O_CREAT | O_TRUNC);
 	if(fd < 0)
 		return STATE_ERROR_SAVE_STATE;
 

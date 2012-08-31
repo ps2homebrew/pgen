@@ -11,8 +11,8 @@
 /* to do: fix F flag in status register */
 
 #include <string.h>
-
 #include "generator.h"
+
 #include "vdp.h"
 #include "cpu68k.h"
 #include "ui.h"
@@ -30,7 +30,7 @@ unsigned int vdp_vislines;
 unsigned int vdp_visstartline;
 unsigned int vdp_visendline;
 unsigned int vdp_totlines;
-unsigned int vdp_framerate;
+unsigned int vdp_framerate = 50;
 unsigned int vdp_clock;
 unsigned int vdp_68kclock;
 unsigned int vdp_clksperline_68k;
@@ -303,17 +303,18 @@ void vdp_storectrl(uint16 data)
 
 void vdp_ramcopy_vram(int type)
 {
-  uint16 length = vdp_reg[19] | vdp_reg[20] << 8;
-  uint8 srcbank = vdp_reg[23];
-  uint16 srcoffset = vdp_reg[21] | vdp_reg[22] << 8;
-  uint8 increment = vdp_reg[15];
+  uint16 length = vdp_reg[0x13] | (vdp_reg[0x14] << 8);
+  uint8 srcbank = vdp_reg[0x17];
+  uint16 srcoffset = vdp_reg[0x15] | (vdp_reg[0x16] << 8);
+  uint8 increment = vdp_reg[0x0f];
   uint16 *srcmemory;
   uint16 srcmask;
   uint16 data;
+  uint32 srcaddr;
   unsigned int i;
 
 #ifdef DEBUG_VDP
-  LOG_VERBOSE(("%08X [VDP] VRAM copy from source %08X "
+  LOG_REQUEST(("%08X [VDP] VRAM copy from source %08X "
                "vdpaddr=%08X length=%d (%s)",
                regs.pc, (srcbank * 0x10000 + srcoffset) * 2, vdp_address,
                length,
@@ -321,15 +322,34 @@ void vdp_ramcopy_vram(int type)
                type == 1 ? "cram" : type == 2 ? "vsram" : "??"));
 #endif
 
-  if (srcbank & 1 << 6) {
-    srcmemory = (uint16 *)cpu68k_ram;
+  if (srcbank & (1 << 6)) {
+    srcaddr = 0;
+    srcmemory = (uint16 *) cpu68k_ram;
     srcmask = 0x7fff;           /* 32k words = 64k */
   } else {
-    srcmemory = (uint16 *)(cpu68k_rom + srcbank * 0x20000);
     srcmask = 0xffff;           /* 64k words = 128k */
+    srcaddr = ((srcbank & 0x7f) << 16);
+    srcmemory = (uint16 *) cpu68k_rom;
+	
+	if ((srcaddr >> 1) >= cpu68k_romlen) {
+		LOG_REQUEST(("srcbank=%u, srcaddr=0x%lx, length=%u",
+			(unsigned) srcbank, (unsigned long) srcaddr,
+			(unsigned) length));	
+		length = 0;
+	} else if (((srcaddr + length) << 1) > cpu68k_romlen) {
+		LOG_REQUEST(("srcbank=%u, srcaddr=0x%lx, length=%u",
+			(unsigned) srcbank, (unsigned long) srcaddr,
+			(unsigned) length));	
+		length = (cpu68k_romlen - srcaddr) >> 1;
+	}
+
   }
   for (i = 0; i < length; i++) {
-    data = LOCENDIAN16(srcmemory[srcoffset & srcmask]);
+	uint16 *addr;
+
+	addr = &srcmemory[srcaddr + (srcoffset & srcmask)];
+
+    data = LOCENDIAN16(*addr);
     switch (type) {
     case 0:                    /* VRAM */
       vdp_vram[vdp_address] = data >> 8;
@@ -353,10 +373,10 @@ void vdp_ramcopy_vram(int type)
     srcoffset += 1;
     vdp_address += increment;
   }
-  vdp_reg[19] = 0;
-  vdp_reg[20] = 0;
-  vdp_reg[22] = (srcoffset >> 8) & 0xff;
-  vdp_reg[21] = srcoffset & 0xff;
+  vdp_reg[0x13] = 0;
+  vdp_reg[0x14] = 0;
+  vdp_reg[0x16] = (srcoffset >> 8) & 0xff;
+  vdp_reg[0x15] = srcoffset & 0xff;
   /* vram sends bytes, cram/vsram send words so are twice as efficient */
   event_freeze(type == 0 ? length * 2 : length);
 }
@@ -1121,15 +1141,13 @@ void vdp_newwindow(unsigned int line, uint8 *pridata, uint8 *outdata)
 void vdp_renderline(unsigned int line, uint8 *linedata, unsigned int odd)
 {
   int i;
-  uint8 datablock[320 * 4];
-  uint8 *data_sprite = datablock;
-  uint8 *data_layerA = datablock + 320;
-  uint8 *data_layerB = datablock + 320 * 2;
-  uint8 *priorities = datablock + 320 * 3;
+  uint32 datablock[320];
+  uint8 *data_sprite = (uint8 *) datablock;
+  uint8 *data_layerA = (uint8 *) datablock + 320;
+  uint8 *data_layerB = (uint8 *) datablock + 320 * 2;
+  uint8 *priorities = (uint8 *) datablock + 320 * 3;
   uint8 bg = vdp_reg[7] & 63;
   unsigned int interlace = (((vdp_reg[12] >> 1) & 3) == 3) ? 1 : 0;
-
-  memset(datablock, 0, sizeof(datablock));
 
   if ((vdp_reg[1] & 1 << 6) == 0) {
     /* screen is disabled */
@@ -1137,6 +1155,8 @@ void vdp_renderline(unsigned int line, uint8 *linedata, unsigned int odd)
       linedata[i] = bg;
     return;
   }
+
+  memset(datablock, 0, sizeof datablock);
 
   if (vdp_layerS || vdp_layerSp)
     vdp_sprites(interlace ? (line * 2 + odd) : line, priorities, data_sprite);
@@ -2066,24 +2086,23 @@ int vdp_sprite_simple(unsigned int priority, uint8 *framedata,
   return plotted;
 }
 
-
 uint8 vdp_gethpos(void)
 {
   float percent;
 
-  // vdp_event = 0/1/2 -> beginning of line until 74 clocks before end
-  // 3     -> between hint and hdisplay (36 clocks)
-  // 4     -> between hdisplay and end  (38 clocks)
-  // This routine goes from 0 to the maximum number allowed not within
-  // H-blank, and then goes slightly beyond up to hdisplay.  Then
-  // between hdisplay and end we go negative.  I'm not sure how negative
-  // it is supposed to be, this goes from -38 to 0.
-  //
-  // 40 horizontal cells, H goes from $00 to $B6, $E4 to $FF
-  // 32 horizontal cells, H goes from $00 to $93, $E8 to $FF
-  //
-  // this is such a bodge - any changes, check '3 Ninjas kick back'
-  
+  /* vdp_event = 0/1/2 -> beginning of line until 74 clocks before end
+     3     -> between hint and hdisplay (36 clocks)
+     4     -> between hdisplay and end  (38 clocks)
+     This routine goes from 0 to the maximum number allowed not within
+     H-blank, and then goes slightly beyond up to hdisplay.  Then
+     between hdisplay and end we go negative.  I'm not sure how negative
+     it is supposed to be, this goes from -38 to 0.
+
+     40 horizontal cells, H goes from $00 to $B6, $E4 to $FF
+     32 horizontal cells, H goes from $00 to $93, $E8 to $FF
+
+     this is such a bodge - any changes, check '3 Ninjas kick back'
+   */
   LOG_DEBUG1(("gethpos %X: clocks=%X : startofline=%X : hint=%X : "
               "end=%X", vdp_event, cpu68k_clocks,
               vdp_event_start, vdp_event_hint, vdp_event_end));

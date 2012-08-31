@@ -3,7 +3,6 @@
 #include "generator.h"
 #include "registers.h"
 
-//#include <string.h>
 #include <setjmp.h>
 
 #include "reg68k.h"

@@ -2,7 +2,6 @@
 /* This file contains the interface to the Z80 emulator core, taken from MAME. */
 /* Support for the MAME Z80 core added by Nick Van Veen */
 
-//#include <stdio.h>
 #include <string.h>
 #include <malloc.h>
 

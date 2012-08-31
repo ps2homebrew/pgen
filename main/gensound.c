@@ -63,15 +63,12 @@ static t_jfm_ctx *sound_ctx;
 
 int sound_init(void)
 {
-  int ret;
 
   sound_sampsperfield = sound_speed / pgenRuntimeSetting.maxFrameSec;
   sound_normalsamples = 48000 / pgenRuntimeSetting.maxFrameSec;
-  sound_threshold = sound_sampsperfield * sound_minfields;
+  sound_threshold = sound_minfields * sound_sampsperfield;
 
-  ret = sound_start();
-  if (ret)
-    return ret;
+  sound_start();
     if(YM2612_Init(vdp_clock / 7,sound_speed,0)) {
     LOG_VERBOSE(("YM2612 failed init"));
     sound_stop();
@@ -99,10 +96,12 @@ int sound_start(void)
 {
   if (sound_active)
     sound_stop();
+  sound_sampsperfield = sound_speed / vdp_framerate;
   LOG_VERBOSE(("Starting sound..."));
   if (soundp_start() == -1) {
-    LOG_VERBOSE(("Failed to start sound hardware"));
-    return -1;
+    LOG_CRITICAL(("Failed to start sound hardware"));
+    sound_active = 0;
+    return 1;
   }
   sound_active = 1;
   LOG_VERBOSE(("Started sound."));
@@ -144,7 +143,7 @@ void sound_startfield(void)
 
 void sound_endfield(void)
 {
-  if (!sound_on) {
+  if (!sound_active) {
     /* sound is turned off - let generator continue */
     sound_feedback = 0;
     return;

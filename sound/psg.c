@@ -180,20 +180,31 @@ void PSG_Update(int **buffer, int length)
 
 	for(j = 2; j >= 0; j--)
 	{
-		if ((cur_vol = PSG.Volume[j]) && ((cur_step = PSG.CntStep[j]) < 0x10000))
+		if (cur_vol = PSG.Volume[j])
 		{
-			cur_cnt = PSG.Counter[j];
-
-			for(i = 0; i < length; i++)
+			if ((cur_step = PSG.CntStep[j]) < 0x10000)
 			{
-				if ((cur_cnt += cur_step) & 0x10000)
+				cur_cnt = PSG.Counter[j];
+
+				for(i = 0; i < length; i++)
+				{
+					if ((cur_cnt += cur_step) & 0x10000)
+					{
+						buffer[0][i] += cur_vol;
+						buffer[1][i] += cur_vol;
+					}
+				}
+
+				PSG.Counter[j] = cur_cnt;
+			}
+			else
+			{
+				for(i = 0; i < length; i++)
 				{
 					buffer[0][i] += cur_vol;
 					buffer[1][i] += cur_vol;
 				}
 			}
-
-			PSG.Counter[j] = cur_cnt;
 		}
 		else
 		{
@@ -298,7 +309,7 @@ void PSG_Init(int clock, int rate)
 */
 	for(i = 0; i < 512; i++)
 	{
-		out = sinf((2.0 * PI) * ((double) (i) / 512));
+		out = sin((2.0 * PI) * ((double) (i) / 512));
 
 		for(j = 0; j < 16; j++)
 		{
@@ -331,7 +342,7 @@ void PSG_Init(int clock, int rate)
 void PSG_Save_State(void)
 {
 	int i;
-
+	
 	for(i = 0; i < 8; i++) PSG_Save[i] = PSG.Register[i];
 }
 
@@ -339,7 +350,7 @@ void PSG_Save_State(void)
 void PSG_Restore_State(void)
 {
 	int i;
-
+	
 	for(i = 0; i < 8; i++)
 	{
 		PSG_Write(0x80 | (i << 4) | (PSG_Save[i] & 0xF));

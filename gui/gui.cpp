@@ -289,7 +289,7 @@ guiMainMenu::guiMainMenu()
 
 void guiMainMenu::draw()
 {													  
-	static char* strings[] = { "Rom List", "Options", "Save Manager", "Credits" };
+	static char* strings[] = { "Rom List", "Options", "Save Manager", "Credits", "Exit" };
 	int yPos = 128;
 	int i;
 
@@ -298,7 +298,7 @@ void guiMainMenu::draw()
 		case GUI_FLAG_ANIM_OPEN:
 
 			if(boxAnim == NULL)
-				boxAnim = new guiAnimateBox(86, 110, 234, 186, GS_SET_RGBA(166, 170, 255, 86), GUI_FLAG_ANIM_OPEN);
+				boxAnim = new guiAnimateBox(86, 110, 234, 201, GS_SET_RGBA(166, 170, 255, 86), GUI_FLAG_ANIM_OPEN);
 
 			if(boxAnim->drawStep())
 			{
@@ -312,7 +312,7 @@ void guiMainMenu::draw()
 		case GUI_FLAG_ANIM_CLOSE:
 
 			if(boxAnim == NULL)
-				boxAnim = new guiAnimateBox(86, 110, 234, 186, GS_SET_RGBA(166, 170, 255, 86), GUI_FLAG_ANIM_CLOSE);
+				boxAnim = new guiAnimateBox(86, 110, 234, 201, GS_SET_RGBA(166, 170, 255, 86), GUI_FLAG_ANIM_CLOSE);
 
 			if(boxAnim->drawStep())
 			{
@@ -336,6 +336,9 @@ void guiMainMenu::draw()
 					case 3:
 						status = GUI_STAT_EXEC_CREDITS;
 						break;
+					case 4:
+						poweroffShutdown();
+						break;
 				}
 				// The above will in effect disable the GUI_STAT_RUNNING bit.
 			}
@@ -345,14 +348,14 @@ void guiMainMenu::draw()
 		default:
 
 			drawPipe->RectFlat(86, 110, 234, 126, Z_BOX1, GS_SET_RGBA(111, 114, 171, 86));
-			drawPipe->RectFlat(86, 126, 234, 186, Z_BOX1, GS_SET_RGBA(166, 170, 255, 86));
+			drawPipe->RectFlat(86, 126, 234, 201, Z_BOX1, GS_SET_RGBA(166, 170, 255, 86));
 
 			updateAlpha();
 
 			zerohourFont.Print(20, 300, 110, Z_LIST, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80), 
 				GSFONT_ALIGN_CENTRE, "Main Menu");
 
-			for(i = 0; i < 4; i++) 
+			for(i = 0; i < 5; i++) 
 			{
 				if(i == selection) 
 					ocraFont.Print(20, 300, yPos, Z_LIST, GS_SET_RGBA(0x80, 0x80, 0x80, alpha), 
@@ -370,7 +373,7 @@ void guiMainMenu::update(u32 padRepeat, u32 padNoRepeat)
 {
 	if((padNoRepeat & PAD_UP) && (selection > 0))
 		selection--;
-	else if((padNoRepeat & PAD_DOWN) && (selection < 3))
+	else if((padNoRepeat & PAD_DOWN) && (selection < 4))
 		selection++;
 	else if(padNoRepeat & PAD_CROSS)
 		flag = GUI_FLAG_ANIM_CLOSE;

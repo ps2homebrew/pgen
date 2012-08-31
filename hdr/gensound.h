@@ -6,10 +6,8 @@
 //#  include "fm.h"
 #endif
 
-//#define SOUND_MAXRATE 44100
-//#define SOUND_SAMPLERATE 22050
 #define SOUND_MAXRATE 48000
-#define SOUND_SAMPLERATE 48000
+#define SOUND_SAMPLERATE 44100
 
 extern int sound_debug;
 extern int sound_feedback;

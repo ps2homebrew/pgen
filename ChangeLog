@@ -1,3 +1,12 @@
+- 03/08/12
+  * sound modules updated to last gens
+  * added suppport for *.gen file extension
+  * added exit menu button (which shut doen console)
+  * code parts updated to last cbiere-v4 generator sources (except generator.cpp and generator.h)
+  * Multitap autodetect shanged into 2nd port (not tested)
+  * Now using older ps2hdd related IRX modules for HDD support
+  * HDD folder changed to "PP.GEN"
+
 - 18/07/12
   * sources updated to Generator 0.36 (2007.02.26)
   * almost all *.irx from ps2sdk
