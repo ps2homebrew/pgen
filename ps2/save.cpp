@@ -139,8 +139,8 @@ int hddSaver::createSave()
 
 	fileXioUmount("pfs2:");
 
-//	delete(saverAIO);
-//	saverAIO = new hddIO("hdd0:PGEN 1.1");
+	delete(saverAIO);
+	saverAIO = new hddIO("hdd0:PGEN 1.1");
 	exists = 1;
 
 	return 0;

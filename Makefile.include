@@ -15,7 +15,7 @@ RM		= rm -f
 CFLAGS	+=	-D_EE -O3 -G0 -Wall -fshort-double -mlong64  \
 		-I. -I../cpu68k -I../gui -I../hdr -I../ps2 -I../lib -I../unzip -I../zlib \
 		-I../sound -I../z80 -I$(PS2LIB)/common/include -I$(PS2LIB)/ee/include \
-		-I$(GSLIB_DIR)/include 
+		-I$(GSLIB_DIR)/include
 
 LIBS		= -lgs -lmtap -lhdd -lpoweroff
 LIBS		+= -lfileXio -lmc
@@ -27,7 +27,7 @@ LIBS += -lpadx
 endif
 LIBS += -lm  -lpatches -lc -lkernel -lc -lkernel
 
-LDFLAGS +=	-L./lib/gslib051/lib  -L$(PS2LIB)/ee/lib #-L$(GSLIB_DIR)/lib
+LDFLAGS +=	-L./lib/gslib051/lib  -L$(PS2LIB)/ee/lib #-L$(PS2LIB)/gslib
 
 %.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@

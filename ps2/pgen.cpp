@@ -155,8 +155,8 @@ void initialise()
 	playNextMod();
 
 	loadHddModules();
-	hddPreparePoweroff();
-	hddSetUserPoweroffCallback(powerOffCallback, NULL);
+	poweroffInit();
+	poweroffSetCallback(powerOffCallback, NULL);
 
 	// Setup default region settings (will be over-written if a config file is found)
 	if(GS_TV_AUTO == GS_TV_NTSC)

@@ -53,6 +53,7 @@ int cpu68k_init(void);
 void cpu68k_printipc(t_ipc *ipc);
 void cpu68k_ipc(uint32 addr68k, uint8 *addr, t_iib *iib, t_ipc *ipc);
 void cpu68k_reset(void);
+void cpu68k_ram_clear(void);
 void cpu68k_step(void);
 void cpu68k_framestep(void);
 t_ipclist *cpu68k_makeipclist(uint32 pc);

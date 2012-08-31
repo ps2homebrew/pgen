@@ -21,8 +21,7 @@ typedef enum {
 /* file-scope global variables */
 
 static int total = 0;
-//static int clocks_movetable[]; /* pre-declaration */
-int clocks_movetable[]; /* pre-declaration */
+static int clocks_movetable[]; /* pre-declaration */
 
 /* private functions for forward references */
 
@@ -451,7 +450,7 @@ void procline(char *line, int lineno, FILE *outiibs, FILE *outfuncs,
 	break;
       default:
 	p--;
-	if (isdigit((int)*p)) {
+	if (isdigit((unsigned char)*p)) {
 	  immvalue = strtol(p, &p, 10);
 	  stype = dt_ImmS;
 	} else {
@@ -1319,7 +1318,7 @@ void procline(char *line, int lineno, FILE *outiibs, FILE *outfuncs,
   } /* block */
 }
 
-int clocks_movetable[] = {
+static int clocks_movetable[] = {
    4,   4,  8,  8,  8, 12, 14, 12, 16,
    4,   4,  8,  8,  8, 12, 14, 12, 16,
    8,   8, 12, 12, 12, 16, 18, 16, 20,

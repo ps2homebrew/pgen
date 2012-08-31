@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 // Change it if you need to do long update
-#define	MAX_UPDATE_LENGHT   2000
+#define	MAX_UPDATE_LENGTH   2000
 
 // Gens always uses 16 bits sound (in 32 bits buffer) and do the convertion later if needed.
 #define OUTPUT_BITS         16
@@ -114,8 +114,8 @@ int YM2612_Reset(void);
 int YM2612_Read(void);
 int YM2612_Write(unsigned char adr, unsigned char data);
 void YM2612_Update(int **buf, int length);
-int YM2612_Save(unsigned char *SAVE);
-int YM2612_Restore(unsigned char *SAVE);
+int YM2612_Save(unsigned char SAVE[0x200]);
+int YM2612_Restore(unsigned char SAVE[0x200]);
 
 /* Gens */
 
@@ -125,41 +125,41 @@ void YM2612_Special_Update(void);
 /* end */
 
 // used for foward...
-void Update_Chan_Algo0(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo1(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo2(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo3(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo4(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo5(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo6(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo7(channel_ *CH, int **buf, int lenght);
+void Update_Chan_Algo0(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo1(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo2(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo3(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo4(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo5(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo6(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo7(channel_ *CH, int **buf, int length);
 
-void Update_Chan_Algo0_LFO(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo1_LFO(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo2_LFO(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo3_LFO(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo4_LFO(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo5_LFO(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo6_LFO(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo7_LFO(channel_ *CH, int **buf, int lenght);
+void Update_Chan_Algo0_LFO(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo1_LFO(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo2_LFO(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo3_LFO(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo4_LFO(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo5_LFO(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo6_LFO(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo7_LFO(channel_ *CH, int **buf, int length);
 
-void Update_Chan_Algo0_Int(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo1_Int(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo2_Int(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo3_Int(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo4_Int(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo5_Int(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo6_Int(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo7_Int(channel_ *CH, int **buf, int lenght);
+void Update_Chan_Algo0_Int(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo1_Int(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo2_Int(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo3_Int(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo4_Int(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo5_Int(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo6_Int(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo7_Int(channel_ *CH, int **buf, int length);
 
-void Update_Chan_Algo0_LFO_Int(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo1_LFO_Int(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo2_LFO_Int(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo3_LFO_Int(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo4_LFO_Int(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo5_LFO_Int(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo6_LFO_Int(channel_ *CH, int **buf, int lenght);
-void Update_Chan_Algo7_LFO_Int(channel_ *CH, int **buf, int lenght);
+void Update_Chan_Algo0_LFO_Int(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo1_LFO_Int(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo2_LFO_Int(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo3_LFO_Int(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo4_LFO_Int(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo5_LFO_Int(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo6_LFO_Int(channel_ *CH, int **buf, int length);
+void Update_Chan_Algo7_LFO_Int(channel_ *CH, int **buf, int length);
 
 // used for foward...
 void Env_Attack_Next(slot_ *SL);
