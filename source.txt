@@ -1,0 +1,12 @@
+I've got no time to work on PGEN anymore, so I figured it would be a good idea 
+to release the source code :) Hopefully somebody else will pick up where I 
+have left off and continue to improve and update PGEN.
+
+The source code relies on the ps2sdk from www.ps2dev.org.
+
+Additionally you need the following tools:
+- zip
+
+You can get the usb driver from the ps2sdk.
+
+Well, Enjoy :)
