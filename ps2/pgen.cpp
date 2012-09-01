@@ -351,7 +351,7 @@ int loadModuleBuffer(u8 *buffer, int size, int argc, char *argv)
 void powerOffCallback(void *arg)
 {
 	pgenState = PGEN_STATE_GUI;
-	poweroffShutdown();
+	//poweroffShutdown();
 }
 
 

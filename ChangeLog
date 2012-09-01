@@ -1,3 +1,10 @@
+-01/09/2012
+  * roll back POWER button action
+    now it is used to prevert pgen freezing
+  * move folder data into static-data (music)
+  * memory card now open memory card root (nor the B?DATA-SYSTEM)
+  * readme changes
+
 -16/08/12
   * minor updates in vdp modules
   * now POWER button works fine (thanks to SP193)
