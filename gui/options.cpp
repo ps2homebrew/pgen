@@ -151,7 +151,9 @@ void guiOptionsMenu::draw()
 void guiOptionsMenu::update(u32 padRepeat, u32 padNoRepeat)
 {
 	if((padNoRepeat & PAD_UP) && (selection > 0))
+	{
 		selection--;
+	}
 	else if(padNoRepeat & PAD_DOWN)
 	{
 		if(	((pgenRuntimeSetting.HDDFormatted) && (selection < 8)) ||

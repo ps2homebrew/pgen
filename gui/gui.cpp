@@ -373,10 +373,18 @@ void guiMainMenu::draw()
 
 void guiMainMenu::update(u32 padRepeat, u32 padNoRepeat)
 {
-	if((padNoRepeat & PAD_UP) && (selection > 0))
+	if(padNoRepeat & PAD_UP)
+	{
 		selection--;
-	else if((padNoRepeat & PAD_DOWN) && (selection < 4))
+		if(selection < 0)
+			selection = 4;
+	}
+	else if(padNoRepeat & PAD_DOWN)
+	{
 		selection++;
+		if(selection > 4)
+			selection = 0;
+	}
 	else if(padNoRepeat & PAD_CROSS)
 		flag = GUI_FLAG_ANIM_CLOSE;
 }

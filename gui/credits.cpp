@@ -6,7 +6,7 @@
 
 
 static char creditText[] = {	"\n\n\n\n\n\n\n\n\n\n"
-							"PGEN v1.5.1 18.03.2007\n"
+							"PGEN v1.5.1 beta readapted by AKuHAK\n"
 							"Sega Genesis/Megadrive emulator\n"
 							"for the PS2\n"
 							"\n"

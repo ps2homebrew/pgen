@@ -15,7 +15,7 @@ OBJECTS	=	ocra-fnt.o zerohour-fnt.o pgenbg.o folder.o sonic.o \
 		freepadIrx.o xmcmanIrx.o xmcservIrx.o freemtapIrx.o
 
 ZIPFILES = *.mod
-ZIPSOURCES = $(addprefix ../data/,$(ZIPFILES))
+ZIPSOURCES = $(addprefix music/,$(ZIPFILES))
 
 all: $(OBJECTS)
 	cp -f $(OBJECTS) ../build/
@@ -42,5 +42,5 @@ clean:
 	bin2s $< $@ $(*)Zip
 
 music.zip: $(ZIPSOURCES)
-	cd ../data && zip -0 ../static-data/$@ $(ZIPFILES)
+	cd music && zip -0 ../$@ $(ZIPFILES)
 

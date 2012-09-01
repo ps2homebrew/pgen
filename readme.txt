@@ -11,6 +11,7 @@
    |                                                                        |
    +-+            PS2 Specific code by Nick Van Veen (Sjeep)              +-+
    ++|    Based on source code from Generator, coded by James Ponder      |++
+   ++|                  Readapted by AKuHAK                               |++
    +++--------------------------------------------------------------------+++
    +++--------------------------------------------------------------------+++
    ++|                          Introduction                              |++
@@ -32,8 +33,8 @@
    ++|                    Current features in v1.2:                       |++
    +++--------------------------------------------------------------------+++
    +-+                                                                    +-+
-   | - Compatible with .SMD and .BIN rom format                             |
-   | - High speed emulation with stereo sound (at 24Khz)                    |
+   | - Compatible with .SMD, .BIN and .GEN rom format                       |
+   | - High speed emulation with stereo sound (at 48Khz)                    |
    | - Two types of sprite rendering: Cell and Line.                        |
    |   Cell is faster but less accurate.                                    |
    | - Pal/NTSC rom autodetect                                              |
@@ -104,11 +105,7 @@
    | screen as "Your System Configuration"). You can use PGEN as your       |
    | BOOT.ELF. For more information on setting up this exploit, please see  |
    | http://www.0xd6.org/ps2-independence.html. PGEN will allow you to load |
-   | rom files stored anywhere on your memory card. It is recommended that  |
-   | you place your roms in the same directory as the PGEN elf file, as     |
-   | when a memory card is selected from the PGEN romlist it will default   |
-   | to the directory on the memory card where the exploit data is stored   |
-   | (usually BEDATA-SYSTEM or similar).                                    |
+   | rom files stored anywhere on your memory card.                                    |
    |                                                                        |
    | HDD (Hard Disk Drive)                                                  |
    | ---------------------                                                  |
@@ -145,8 +142,8 @@
    | roms to use the standard rom naming convention. You can download the   |
    | GoodGEN utility from the PGEN website.                                 |
    |                                                                        |
-   | NOTE: Roms MUST have either a ".bin", ".smd" or ".zip" extension to be |
-   |       recognised by PGEN.                                              |
+   | NOTE: Roms MUST have either a ".bin", ".smd", ".gen" or ".zip"         |
+   |       extension to be recognised by PGEN.                              |
    +-+                                                                    +-+
    +++--------------------------------------------------------------------+++
    +++--------------------------------------------------------------------+++

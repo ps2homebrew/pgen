@@ -162,7 +162,7 @@ void guiRomlist::update(u32 padRepeat, u32 padNoRepeat)
 					else
 					{
 						// If entering memcard, try and start in BRDATA-SYSTEM directory
-						if(	strstr(sortedList[selection]->fileName, "mc0:") ||
+						/*if(	strstr(sortedList[selection]->fileName, "mc0:") ||
 							strstr(sortedList[selection]->fileName, "mc1:"))
 						{
 							t_aioDent dent;
@@ -173,7 +173,7 @@ void guiRomlist::update(u32 padRepeat, u32 padNoRepeat)
 								dirLevel++;
 							}
 						}
-						else
+						else*/
 							strcpy(path, "/");
 
 						dirLevel++;
