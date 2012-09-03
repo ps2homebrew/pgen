@@ -11,6 +11,7 @@
 #define CDVD_TRAYREQ	0x05
 #define CDVD_DISKREADY	0x06
 #define CDVD_FLUSHCACHE	0x07
+#define CDVD_GETSIZE	0x08
 
 
 struct TocEntry

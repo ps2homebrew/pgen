@@ -53,15 +53,15 @@ int cdvdIO::close(int fd)
 
 int cdvdIO::read(int fd, unsigned char *buffer, int size)
 {
-	u8 *currentPtr = (u8 *)buffer;
+/*	u8 *currentPtr = (u8 *)buffer;
 	int read = 0;
 	int rv;
-
+*/
 #ifdef AIOCVDV_DEBUG
 //	printf("cdvdIO read\n");
 #endif
 
-	while(size)
+/*	while(size)
 	{
 		int currentSize = MIN(SAFE_READ_SIZE, size);
 
@@ -79,7 +79,9 @@ int cdvdIO::read(int fd, unsigned char *buffer, int size)
 		read += currentSize;
 	}
 
-	return read;
+	return read;*/
+
+	return fioRead(fd, buffer, size);
 }
 
 int cdvdIO::write(int fd, const unsigned char *buffer, int size)
