@@ -1,18 +1,23 @@
-/* Copyright 2006 by Mega Man */
-
 #include <tamtypes.h>
+#include <sifdma.h>
+#include "sifrpc.h"
+#include <loadcore.h>
+#include <thsemap.h>
+#include <intrman.h>
 #include <thbase.h>
-#include <sifrpc.h>
+#include <sifcmd.h>
 #include <ioman.h>
+#include "ps2lib_ioman.h"
+#include <sysclib.h>
 #include <stdio.h>
 #include <sysmem.h>
-#include <sysclib.h>
-#include <sifman.h>
 
 #include "cdvd_iop.h"
 
 #define TRUE	1
 #define FALSE	0
+
+#define TH_C		0x02000000
 
 enum PathMatch
 {
@@ -128,7 +133,7 @@ struct dirTocEntry
 
 struct fdtable
 {
-	iop_file_t* fd;
+	int fd;
 	int fileSize;
 	int LBA;
 	int filePos;
@@ -169,15 +174,15 @@ static struct fdtable fd_table[16];
 static int fd_used[16];
 static int files_open;
 
-static iop_device_t file_driver;
+static struct fileio_driver file_driver;
 
 /* Filing-system exported functions */
-int CDVD_init(iop_device_t *driver);
-int CDVD_open(iop_file_t* fd, const char *name, int mode, ...);
-int CDVD_lseek(iop_file_t* fd, unsigned long offset, int whence);
-int CDVD_read(iop_file_t* fd, void *buffer, int size);
-int CDVD_write(iop_file_t* fd, void *buffer, int size);
-int CDVD_close(iop_file_t* fd);
+void CDVD_init( struct fileio_driver *driver);
+int CDVD_open( int kernel_fd, char *name, int mode);
+int CDVD_lseek(int kernel_fd, int offset, int whence);
+int CDVD_read( int kernel_fd, char * buffer, int size );
+int CDVD_write( int fd, char * buffer, int size );
+int CDVD_close( int kernel_fd);
 
 /* RPC exported functions */
 int CDVD_findfile(const char* fname, struct TocEntry* tocEntry);
@@ -287,30 +292,30 @@ int dummy()
 	return -5;
 }
 
-int CDVD_init(iop_device_t *driver)
+void CDVD_init( struct fileio_driver *driver)
 {
 	printf("CDVD: CDVD Filesystem v1.15\n");
 	printf("by A.Lee (aka Hiryu) & Nicholas Van Veen (aka Sjeep)\n");
-	printf("CDVD: Initializing '%s' file driver.\n", driver->name);
+	printf("CDVD: Initializing '%s' file driver.\n", driver->device);
 
 	CdInit(0);
 
 	memset(fd_table,0,sizeof(fd_table));
 	memset(fd_used,0,16*4);
 
-	return 1;
+	return;
 }
 
 
 
-int CDVD_open(iop_file_t* fd, const char *name, int mode, ...)
+int CDVD_open( int kernel_fd, char *name, int mode)
 {
 	int j;
 	static struct TocEntry tocEntry;
 
 	#ifdef DEBUG
 		printf("CDVD: fd_open called.\n" );
-   		printf("      kernel_fd.. %d\n", fd);
+   		printf("      kernel_fd.. %d\n", kernel_fd);
    		printf("      name....... %s %x\n", name, (int)name);
    		printf("      mode....... %d\n\n", mode);
 	#endif
@@ -341,7 +346,7 @@ int CDVD_open(iop_file_t* fd, const char *name, int mode, ...)
 		printf("CDVD: internal fd %d\n", j);
 	#endif
 
-	fd_table[j].fd = fd;
+	fd_table[j].fd = kernel_fd;
 	fd_table[j].fileSize = tocEntry.fileSize;
 	fd_table[j].LBA = tocEntry.fileLBA;
 	fd_table[j].filePos = 0;
@@ -352,25 +357,25 @@ int CDVD_open(iop_file_t* fd, const char *name, int mode, ...)
 		printf("Opened file: %s\n",name);
 	#endif
 
-   	return (int) fd;
+   	return kernel_fd;
 }
 
 
 
-int CDVD_lseek(iop_file_t* fd, unsigned long offset, int whence)
+int CDVD_lseek(int kernel_fd, int offset, int whence)
 {
 	int i;
 
 	#ifdef DEBUG
 		printf("CDVD: fd_seek called.\n");
-		printf("      kernel_fd... %d\n", fd);
+		printf("      kernel_fd... %d\n", kernel_fd);
 		printf("      offset...... %d\n", offset);
 		printf("      whence...... %d\n\n", whence);
 	#endif
 
 	for(i=0; i < 16; i++)
 	{
-		if(fd_table[i].fd == fd)
+		if(fd_table[i].fd == kernel_fd)
 			break;
 	}
 
@@ -411,7 +416,7 @@ int CDVD_lseek(iop_file_t* fd, unsigned long offset, int whence)
 }
 
 
-int CDVD_read(iop_file_t* fd, void *buffer, int size)
+int CDVD_read( int kernel_fd, char * buffer, int size )
 {
 	int i;
 
@@ -430,14 +435,14 @@ int CDVD_read(iop_file_t* fd, void *buffer, int size)
 
 	#ifdef DEBUG
    		printf("CDVD: read called\n");
-   		printf("      kernel_fd... %d\n", fd);
-   		printf("      buffer...... 0x%X\n", (int) buffer);
-   		printf("      size........ %d\n\n", size);
+   		printf("      kernel_fd... %d\n",kernel_fd);
+   		printf("      buffer...... 0x%X\n",(int)buffer);
+   		printf("      size........ %d\n\n",size);
 	#endif
 
 	for(i=0; i < 16; i++)
 	{
-		if(fd_table[i].fd == fd)
+		if(fd_table[i].fd == kernel_fd)
 			break;
 	}
 
@@ -510,7 +515,7 @@ int CDVD_read(iop_file_t* fd, void *buffer, int size)
 }
 
 
-int CDVD_write(iop_file_t* fd, void *buffer, int size)
+int CDVD_write( int kernel_fd, char * buffer, int size )
 {
    if(size == 0) return 0;
    else 		 return -1;
@@ -518,18 +523,18 @@ int CDVD_write(iop_file_t* fd, void *buffer, int size)
 
 
 
-int CDVD_close(iop_file_t* fd)
+int CDVD_close( int kernel_fd)
 {
 	int i;
 
 	#ifdef DEBUG
    		printf("CDVD: fd_close called.\n" );
-   		printf("      kernel fd.. %d\n\n", fd);
+   		printf("      kernel fd.. %d\n\n", kernel_fd);
 	#endif
 
 	for(i=0; i < 16; i++)
 	{
-		if(fd_table[i].fd == fd)
+		if(fd_table[i].fd == kernel_fd)
 			break;
 	}
 
@@ -553,12 +558,12 @@ int CDVD_close(iop_file_t* fd)
 }
 
 
-static iop_device_ops_t filedriver_functarray;
+static void *filedriver_functarray[16];
 
 int _start( int argc, char **argv)
 {
 	int	i;
-	iop_thread_t param;
+	struct _iop_thread param;
 	int th;
 
 	// Initialise the directory cache
@@ -580,37 +585,30 @@ int _start( int argc, char **argv)
 	cdReadMode.datapattern = CdSecS2048;
 
 	// setup the file_driver structure
-	file_driver.name = "cdfs";
+	file_driver.device = "cdfs";
+	file_driver.xx1 = 16;
 	file_driver.version = 1;
-	file_driver.desc = "CDVD Filedriver";
-	file_driver.ops = &filedriver_functarray;
+	file_driver.description = "CDVD Filedriver";
+	file_driver.function_list = filedriver_functarray;
 
-	filedriver_functarray.init = CDVD_init;
-	filedriver_functarray.deinit = dummy;
-	filedriver_functarray.format = dummy;
-	filedriver_functarray.open = CDVD_open;
-	filedriver_functarray.close = CDVD_close;
-	filedriver_functarray.read = CDVD_read;
-	filedriver_functarray.write = CDVD_write;
-	filedriver_functarray.lseek = CDVD_lseek;
-	filedriver_functarray.ioctl = dummy;
-	filedriver_functarray.remove = dummy;
-	filedriver_functarray.mkdir = dummy;
-	filedriver_functarray.rmdir = dummy;
-	filedriver_functarray.dopen = dummy;
-	filedriver_functarray.dclose = dummy;
-	filedriver_functarray.dread = dummy;
-	filedriver_functarray.getstat = dummy;
-	filedriver_functarray.chstat = dummy;
+	for (i=0;i < 16; i++)
+		filedriver_functarray[i] = dummy;
 
-	DelDrv("cdfs");
-	AddDrv(&file_driver);
+	filedriver_functarray[ FIO_INITIALIZE ] = CDVD_init;
+	filedriver_functarray[ FIO_OPEN ] = CDVD_open;
+	filedriver_functarray[ FIO_CLOSE ] = CDVD_close;
+	filedriver_functarray[ FIO_READ ] = CDVD_read;
+	filedriver_functarray[ FIO_WRITE ] = CDVD_write;
+	filedriver_functarray[ FIO_SEEK ] = CDVD_lseek;
 
-	param.attr      = TH_C;
-	param.thread    = (void*)CDVD_Thread;
-	param.priority  = 40;
-	param.stacksize = 0x8000;
-	param.option    = 0;
+	FILEIO_del( "cdfs");
+	FILEIO_add( &file_driver);
+
+	param.attr         = TH_C;
+	param.thread       = (void*)CDVD_Thread;
+	param.priority 	  = 40;
+	param.stacksize    = 0x8000;
+	param.option       = 0;
 
 	th = CreateThread(&param);
 
@@ -1039,7 +1037,7 @@ int CDVD_Cache_Dir(const char* pathname, enum Cache_getMode getMode)
 	// Setup the lba and sector size, for retrieving the root toc
 	CachedDirInfo.cache_offset =0;
 	CachedDirInfo.sector_start = CDVolDesc.rootToc.tocLBA;
-	CachedDirInfo.sector_num = CDVolDesc.rootToc.tocSize>>11;
+	CachedDirInfo.sector_num = (CDVolDesc.rootToc.tocSize>>11) + ((CDVolDesc.rootToc.tocSize & 2047)!=0);
 
     CachedDirInfo.cache_size = CachedDirInfo.sector_num;
 
@@ -1242,7 +1240,7 @@ int FindPath(char* pathname)
 		dirname = strtok(NULL,"\\/");
 
 		CachedDirInfo.sector_start = localTocEntry.fileLBA;
-		CachedDirInfo.sector_num = localTocEntry.fileSize >> 11;
+		CachedDirInfo.sector_num = (localTocEntry.fileSize >> 11) + ((CDVolDesc.rootToc.tocSize & 2047)!=0);
 
 		// Cache the start of the found directory
 		// (used in searching if this isn't the last dir,
@@ -1298,7 +1296,7 @@ int CDVD_GetDir_RPC(const char* pathname, const char* extensions, enum CDVD_getM
 
 	int intStatus;	// interrupt status - for dis/en-abling interrupts
 
-	SifDmaTransfer_t dmaStruct;
+	struct t_SifDmaTransfer dmaStruct;
 	int dmaID;
 
 	dmaID = 0;
@@ -1380,7 +1378,7 @@ int CDVD_GetDir_RPC(const char* pathname, const char* extensions, enum CDVD_getM
 
 					// wait for any previous DMA to complete
 					// before over-writing localTocEntry
-					while(SifDmaStat(dmaID)>=0);
+					while(sceSifDmaStat(dmaID)>=0);
 
 					TocEntryCopy(&localTocEntry, tocEntryPointer);
 
@@ -1407,7 +1405,7 @@ int CDVD_GetDir_RPC(const char* pathname, const char* extensions, enum CDVD_getM
 					// Do the DMA transfer
 					CpuSuspendIntr(&intStatus);
 
-					dmaID = SifSetDma(&dmaStruct, 1);
+					dmaID = sceSifSetDma(&dmaStruct, 1);
 
 					CpuResumeIntr(intStatus);
 
@@ -1504,7 +1502,7 @@ int CDVD_GetDir_RPC(const char* pathname, const char* extensions, enum CDVD_getM
 				{
 					// wait for any previous DMA to complete
 					// before over-writing localTocEntry
-					while(SifDmaStat(dmaID)>=0);
+					while(sceSifDmaStat(dmaID)>=0);
 
 					TocEntryCopy(&localTocEntry, tocEntryPointer);
 
@@ -1528,7 +1526,7 @@ int CDVD_GetDir_RPC(const char* pathname, const char* extensions, enum CDVD_getM
 							// Do the DMA transfer
 							CpuSuspendIntr(&intStatus);
 
-							dmaID = SifSetDma(&dmaStruct, 1);
+							dmaID = sceSifSetDma(&dmaStruct, 1);
 
 							CpuResumeIntr(intStatus);
 
@@ -1558,7 +1556,7 @@ int CDVD_GetDir_RPC(const char* pathname, const char* extensions, enum CDVD_getM
 						// Do the DMA transfer
 						CpuSuspendIntr(&intStatus);
 
-						dmaID = SifSetDma(&dmaStruct, 1);
+						dmaID = sceSifSetDma(&dmaStruct, 1);
 
 						CpuResumeIntr(intStatus);
 
@@ -1638,9 +1636,9 @@ void* CDVDRpc_Stop()
 // Return: Offset 0 = traycnt. Size = int
 void* CDVDRpc_TrayReq(unsigned int* sbuff)
 {
-	u32 ret;
+	int ret;
 
-	CdTrayReq(sbuff[0],&ret);
+	CdTrayReq(sbuff[0],(s32*)&ret);
 
 	sbuff[0] = ret;
 	return sbuff;
@@ -1862,6 +1860,7 @@ int TocEntryCompare(char* filename, const char* extensions)
 }
 
 // Used in findfile
+//int tolower(int c);
 int strcasecmp(const char *s1, const char *s2)
 {
 	while (*s1 != '\0' && tolower(*s1) == tolower(*s2))
