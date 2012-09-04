@@ -584,22 +584,22 @@ void guiUpdateDisplayPosition()
 	else
 		currentVideoMode = pgenRuntimeSetting.gameVideoMode;
 
-	switch(currentVideoMode)
+	/*switch(currentVideoMode)
 	{
-		case GS_TV_PAL:
+		case GS_TV_PAL:*/
 				
 			dispDriver->setDisplayPosition(pgenRuntimeSetting.settings.dispXPAL,
 				pgenRuntimeSetting.settings.dispYPAL);
 
-			break;
+			/*break;
 
 		case GS_TV_NTSC:
 
-			dispDriver->setDisplayPosition(pgenRuntimeSetting.settings.dispXNTSC,
-				pgenRuntimeSetting.settings.dispYNTSC);
+			dispDriver->setDisplayPosition(pgenRuntimeSetting.settings.dispXPAL,
+				pgenRuntimeSetting.settings.dispYPAL-24);
 
 			break;
-	}
+	}*/
 }
 
 void guiDoDisplayCalibrate()
@@ -651,9 +651,9 @@ void guiDoDisplayCalibrate()
 
 		if(diffx || diffy)
 		{
-			switch(currentVideoMode)
+			/*switch(currentVideoMode)
 			{
-				case GS_TV_PAL:
+				case GS_TV_PAL:*/
 				
 					pgenRuntimeSetting.settings.dispXPAL += diffx;
 					pgenRuntimeSetting.settings.dispYPAL += diffy;
@@ -665,8 +665,8 @@ void guiDoDisplayCalibrate()
 
 					dispDriver->setDisplayPosition(pgenRuntimeSetting.settings.dispXPAL,
 						pgenRuntimeSetting.settings.dispYPAL);
-
-					break;
+				
+					/*break;
 
 				case GS_TV_NTSC:
 
@@ -678,11 +678,12 @@ void guiDoDisplayCalibrate()
 					if(pgenRuntimeSetting.settings.dispYNTSC < 0)
 						pgenRuntimeSetting.settings.dispYNTSC = 0;
 
-					dispDriver->setDisplayPosition(pgenRuntimeSetting.settings.dispXNTSC,
-						pgenRuntimeSetting.settings.dispYNTSC);
+				//case GS_TV_NTSC:
+					dispDriver->setDisplayPosition(pgenRuntimeSetting.settings.dispXPAL,
+						pgenRuntimeSetting.settings.dispYPAL-24);
 
 					break;
-			}
+			}*/
 		}
 
 		guiUpdateScreen();
