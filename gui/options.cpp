@@ -75,23 +75,34 @@ void guiOptionsMenu::updateOptionString()
 	else
 		strcat(&optionString[7][0], "On");
 
-	strcpy(&optionString[8][0], "Save device: ");
+	strcpy(&optionString[8][0], "Video Mode: ");
+	switch(pgenRuntimeSetting.guiVideoMode)
+	{
+			case GS_TV_NTSC:
+				strcat(&optionString[8][0], "NTSC");
+				break;
+			case GS_TV_PAL:
+				strcat(&optionString[8][0], "PAL");
+				break;
+	}
+
+	strcpy(&optionString[9][0], "Save device: ");
 	if(pgenRuntimeSetting.settings.saveDevice == 0)
-		strcat(&optionString[8][0], "Memory Card");
+		strcat(&optionString[9][0], "Memory Card");
 	else
-		strcat(&optionString[8][0], "HDD");
+		strcat(&optionString[9][0], "HDD");
 }
 
 void guiOptionsMenu::draw()
 {
-	int yPos = 96;
+	int yPos = 85;
 
 	switch(flag)
 	{
 		case GUI_FLAG_ANIM_OPEN:
 
 			if(boxAnim == NULL)
-				boxAnim = new guiAnimateBox(70, 78, 250, 218, GS_SET_RGBA(166, 170, 255, 86), GUI_FLAG_ANIM_OPEN);
+				boxAnim = new guiAnimateBox(70, yPos-18, 250, 218, GS_SET_RGBA(166, 170, 255, 86), GUI_FLAG_ANIM_OPEN);
 
 			if(boxAnim->drawStep())
 			{
@@ -106,7 +117,7 @@ void guiOptionsMenu::draw()
 		case GUI_FLAG_ANIM_CLOSE:
 
 			if(boxAnim == NULL)
-				boxAnim = new guiAnimateBox(70, 78, 250, 218, GS_SET_RGBA(166, 170, 255, 86), GUI_FLAG_ANIM_CLOSE);
+				boxAnim = new guiAnimateBox(70, yPos-18, 250, 218, GS_SET_RGBA(166, 170, 255, 86), GUI_FLAG_ANIM_CLOSE);
 
 			if(boxAnim->drawStep())
 			{
@@ -120,19 +131,19 @@ void guiOptionsMenu::draw()
 
 		default:
 
-			drawPipe->RectFlat(70, 78, 250, 94, Z_BOX1, GS_SET_RGBA(111, 114, 171, 86));
-			drawPipe->RectFlat(70, 94, 250, 218, Z_BOX1, GS_SET_RGBA(166, 170, 255, 86));
+			drawPipe->RectFlat(70, yPos-18, 250, yPos-2, Z_BOX1, GS_SET_RGBA(111, 114, 171, 86));
+			drawPipe->RectFlat(70, yPos-2, 250, 218, Z_BOX1, GS_SET_RGBA(166, 170, 255, 86));
 
-			zerohourFont.Print(20, 300, 78, Z_LIST, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80), 
+			zerohourFont.Print(20, 300, yPos-18, Z_LIST, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80), 
 				GSFONT_ALIGN_CENTRE, "Options");
 
 			updateAlpha();
 
-			for(int i = 0; i < 9; i++)
+			for(int i = 0; i < 10; i++)
 			{
 				u32 color;
 
-				if((i == 8) && (!pgenRuntimeSetting.HDDFormatted))
+				if((i == 9) && (!pgenRuntimeSetting.HDDFormatted))
 					color = GS_SET_RGBA(0x55, 0x55, 0x55, 180);
 				else if(i == selection)
 					color = GS_SET_RGBA(0x80, 0x80, 0x80, alpha);
@@ -156,8 +167,8 @@ void guiOptionsMenu::update(u32 padRepeat, u32 padNoRepeat)
 	}
 	else if(padNoRepeat & PAD_DOWN)
 	{
-		if(	((pgenRuntimeSetting.HDDFormatted) && (selection < 8)) ||
-			((!pgenRuntimeSetting.HDDFormatted) && (selection < 7)) )
+		if(	((pgenRuntimeSetting.HDDFormatted) && (selection < 9)) ||
+			((!pgenRuntimeSetting.HDDFormatted) && (selection < 8)) )
 				selection++;
 	}
 	else if(padRepeat & PAD_TRIANGLE)
@@ -227,7 +238,16 @@ void guiOptionsMenu::update(u32 padRepeat, u32 padNoRepeat)
 				pgenRuntimeSetting.settings.displayFps ^= 1;
 				break;
 			
-			case 8:	// Save device
+			case 8:	// Video system
+
+				pgenRuntimeSetting.guiVideoMode++;
+				if(pgenRuntimeSetting.guiVideoMode > 3) 
+					pgenRuntimeSetting.guiVideoMode = 2;
+				gfxChangeDefaultVideoMode(pgenRuntimeSetting.guiVideoMode); 
+
+				break;
+
+			case 9:	// Save device
 
 				pgenRuntimeSetting.settings.saveDevice ^= 1;
 

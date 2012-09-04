@@ -23,14 +23,15 @@
    | that. The compatibility rate is very high and the speed is practically |
    | perfect with stereo sound.                                             |
    |                                                                        |
-   | PGEN is freeware and can be downloaded at http://pgen.gamebase.ca. You |
-   | will also find forums there for support and comments. Please do not    |
+   | PGEN is freeware and can be downloaded at                              |
+   |              https://bitbucket.org/AKuHAK/pgen/src/                   |
+   |                            Please do not                               |
    | ask for ROMs or distribute this program with ROMs. We do not condone   |
    | such behavior.                                                         |
    +-+                                                                    +-+
    +++--------------------------------------------------------------------+++
    +++--------------------------------------------------------------------+++
-   ++|                    Current features in v1.2:                       |++
+   ++|                    Current features in v1.5:                       |++
    +++--------------------------------------------------------------------+++
    +-+                                                                    +-+
    | - Compatible with .SMD, .BIN and .GEN rom format                       |
@@ -44,7 +45,7 @@
    | - Quick savestate function, does not write to memcard                  |
    | - Screen positioning                                                   |
    | - Dual-shock controller analog stick support                           |
-   | - Cool GUI with music                                                  |
+   | - Cool GUI with customizable music                                     |
    | - Automatic ROM detection (no FILES.TXT needed!)                       |
    | - Support for multiple levels of rom directories                       |
    | - Supports Joliet filesystem - long filenames, no file number limit    |
@@ -64,14 +65,15 @@
    | - Re-write rendering engine (to get 100% speed in ALL games)           |
    | - Configurable controls                                                |
    | - Fix any remaining bugs                                               |
+   | - Change base emultaor to improve compatability                        |
    +-+                                                                    +-+
    +++--------------------------------------------------------------------+++
    +++--------------------------------------------------------------------+++
    ++|             Booting PGEN and getting ROM's in place                |++
    +++--------------------------------------------------------------------+++
    +-+                                                                    +-+
-   | PGEN can be loaded from a CDROM, HDD or a Memory card. It can also     |
-   | load roms from any of those three devices. The method for booting PGEN |
+   | PGEN can be loaded from a CDROM, HDD, USB, Memory card. It can also    |
+   | load roms from any of those four devices. The method for booting PGEN  |
    | and getting the roms into place varies between each of the devices,    |
    | and each method is described below:                                    |
    |                                                                        |
@@ -83,7 +85,7 @@
    | forum such as http://www.ps2newz.net                                   |
    |                                                                        |
    | Prepare a CD compilation using your favourite burning software. For    |
-   | this compilation, you must place the PGEN files (PGEN11.ELF and        |
+   | this compilation, you must place the PGEN files (PGEN.ELF and          |
    | SYSTEM.CNF) in the root of the compilation. If you will be placing roms|
    | on the compilation (which isnt necessary, as you may wish to place the |
    | roms on a HDD or memory card instead), then place them in one or       |
@@ -94,6 +96,8 @@
    | all your roms inside this directory. The 32 file/dir limitation only   |
    | applies for the root directory. Once your compilation has been         |
    | prepared, burn as a MODE2/XA disc.                                     |
+   |                  You can get example of CD disk at                     |
+   |      https://bitbucket.org/AKuHAK/pgen/downloads/pgen_test.zip         |
    |                                                                        |
    | Memory Card                                                            |
    | -----------                                                            |
@@ -174,7 +178,7 @@
    +++--------------------------------------------------------------------+++
    +-+                                                                    +-+
    | NOTICE: You CAN NOT use saved states from any PGEN version older than  |
-   |         1.1 with version 1.2. The staved state format has changed as   |
+   |         1.1. The staved state format has changed as                    |
    |         of version 1.1 and any old saved states are incompatible. You  |
    |         wont need to delete your old saves however, you can still use  |
    |         them with the older PGEN releases.                             |
@@ -203,6 +207,13 @@
    |    (the one which lists "CDROM", "Memory Card 1" etc), switching CD's  |
    |    and then selecting "CDROM" again. Each time "CDROM" is selected     |
    |    from the base romlist directory, the CD listing is refreshed.       |
+   |                                                                        |
+   |    Swapping USB Flash Drives                                           |
+   |    =================                                                   |
+   |    You can swap rom USB by returning to the base romlist directory     |
+   |    (the one which lists "CDROM", "Memory Card 1" etc), switching USB   |
+   |    and then selecting "MASS" again. Each time "MASS" is selected       |
+   |    from the base romlist directory, the USB listing is refreshed.      |
    |                                                                        |
    | Options menu:                                                          |
    | -------------                                                          |
@@ -241,6 +252,8 @@
    |                                                                        |
    | Frame counter: If this option is enabled, a framecounter will be       |
    |                displayed below the genesis display during emulation.   |
+   |                                                                        |
+   | Video mode: Switching between PAL or NTSC video modes                  |
    |                                                                        |
    | Save Device: If a properly formatted HDD is installed in your PS2 then |
    |              by default PGEN will use the HDD to store saved states    |

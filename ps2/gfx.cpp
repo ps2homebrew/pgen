@@ -177,20 +177,18 @@ void initGFX()
 	dispDriver = new gsDriver;
 	drawPipe = &dispDriver->drawPipe;
 
+	pgenRuntimeSetting.gameVideoMode = defaultVidMode;
+	pgenRuntimeSetting.guiVideoMode = defaultVidMode;	
 	switch(defaultVidMode)
 	{
 		case GS_TV_PAL:
 
-			pgenRuntimeSetting.gameVideoMode = GS_TV_PAL;
-			pgenRuntimeSetting.guiVideoMode = GS_TV_PAL;
 			pgenRuntimeSetting.maxFrameSec = 50;
 
 			break;
 
 		case GS_TV_NTSC:
 
-			pgenRuntimeSetting.gameVideoMode = GS_TV_NTSC;
-			pgenRuntimeSetting.guiVideoMode = GS_TV_NTSC;
 			pgenRuntimeSetting.maxFrameSec = 60;
 
 			break;
@@ -209,20 +207,18 @@ void initGFX()
 
 void gfxChangeDefaultVideoMode(int vidMode)
 {
+	pgenRuntimeSetting.gameVideoMode = vidMode;
+	pgenRuntimeSetting.guiVideoMode = vidMode;
 	switch(vidMode)
 	{
 		case GS_TV_PAL:
 
-			pgenRuntimeSetting.gameVideoMode = GS_TV_PAL;
-			pgenRuntimeSetting.guiVideoMode = GS_TV_PAL;
 			pgenRuntimeSetting.maxFrameSec = 50;
 
 			break;
 
 		case GS_TV_NTSC:
 
-			pgenRuntimeSetting.gameVideoMode = GS_TV_NTSC;
-			pgenRuntimeSetting.guiVideoMode = GS_TV_NTSC;
 			pgenRuntimeSetting.maxFrameSec = 60;
 
 			break;
@@ -399,8 +395,8 @@ void gfxSetPal()
 
 void gfxSetNtsc()
 {
-	dispDriver->setDisplayMode(320, 240, pgenRuntimeSetting.settings.dispXNTSC, 
-		pgenRuntimeSetting.settings.dispYNTSC, GS_PSMCT16, 4, 
+	dispDriver->setDisplayMode(320, 240, pgenRuntimeSetting.settings.dispXPAL, 
+		pgenRuntimeSetting.settings.dispYPAL, GS_PSMCT16, 4, 
 		GS_TV_NTSC, GS_TV_NONINTERLACE, GS_ENABLE, GS_PSMZ16);
 }
 
