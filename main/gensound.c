@@ -23,7 +23,7 @@
 */
 /*** variables externed ***/
 
-unsigned int sound_speed = 48000;    /* sample rate 24000*/
+unsigned int sound_speed = 24000;    /* sample rate 24000*/
 
 int sound_debug = 0;            /* debug mode */
 int sound_feedback = 0;         /* -1, running out of sound
