@@ -13,7 +13,10 @@
 #define GS_PMODE	*((volatile unsigned long int*)0x12000000)
 #define GS_SMODE2	*((volatile unsigned long int*)0x12000020)
 #define GS_DISPFB1	*((volatile unsigned long int*)0x12000070)
+#define GS_DISPFB2	*((volatile unsigned long int*)0x12000090)
 #define GS_DISPLAY1	*((volatile unsigned long int*)0x12000080)
+//#define GS_DISPLAY1	((volatile unsigned long int*)0x12000080)
+#define GS_DISPLAY2        ((volatile u64 *)(0x120000a0))
 #define GS_BGCOLOUR	*((volatile unsigned long int*)0x120000E0)
 #define GS_CSR      *((volatile unsigned long int*)0x12001000)
 #define GS_BUSDIR   *((volatile unsigned long int*)0x12001040)
@@ -77,11 +80,66 @@
 #define GS_DISABLE			0
 
 // GS Display Mode Settings
-#define GS_TV_INTERLACE		1
-#define GS_TV_NONINTERLACE	0
-#define GS_TV_PAL			3
-#define GS_TV_NTSC			2
-#define GS_TV_AUTO			((*((char*)0x1FC7FF52))=='E')+2
+
+// Interlacing in GS_FIELD mode makes the GS read the frame's odd lines
+// then even lines resulting in only half a frame shown each 1/60 seconds.
+// The drawing area needs to be double the height as the noninterlaced mode
+// or the same height as the resolution.
+
+// Interlacing in GS_FRAME mode makes the GS read every line of the frame
+// and displays each line on every odd line.
+// This gives 16.67ms of time to render a matching frame for the even lines.
+// Otherwise, a single frame will result in an image that appears to jitter
+// up and down.
+// The drawing area needs to be the same height as the noninterlaced mode
+// or half the height as the resolution
+
+#define GS_FIELD 0x00
+#define GS_FRAME 0x01
+
+#define GS_EVEN 0x00
+#define GS_ODD  0x01
+
+#define GS_NONINTERLACE 0x00
+#define GS_INTERLACE    0x01
+
+enum gsInterlace {
+	NONINTERLACE = 0,
+	FRAME = 1,
+	FIELD = 2
+};
+
+enum gsMode {
+	AUTO       = 0x00,
+	NTSC       = 0x02,
+	PAL        = 0x03,
+	VGA640_60  = 0x1A,
+	VGA640_72  = 0x1B,
+	VGA640_75  = 0x1C,
+	VGA640_85  = 0x1D,
+	VGA800_56  = 0x2A,
+	VGA800_60  = 0x2B,
+	VGA800_72  = 0x2C,
+	VGA800_75  = 0x2D,
+	VGA800_85  = 0x2E,
+	VGA1024_60 = 0x3B,
+	VGA1024_70 = 0x3C,
+	VGA1024_75 = 0x3D,
+	VGA1024_85 = 0x3E,
+	VGA1280_60 = 0x4A,
+	VGA1280_75 = 0x4B,
+	DTV480P    = 0x50,
+	DTV720P    = 0x52,
+        DTV1080I   = 0x51,
+	DVDNTSC    = 0x72,
+	DVDPAL     = 0x73,
+	DVD480P    = 0x74
+};
+
+#define GS_DPMS_ON           0x00
+#define GS_DPMS_STANDBY      0x01
+#define GS_DPMS_SUSPEND      0x10
+#define GS_DPMS_OFF          0x11
 
 // GS PSM Settings
 #define GS_PSMCT32		0x00
@@ -179,7 +237,10 @@ typedef struct{
 	((u64)(fge) << 5) | ((u64)(abe) << 6)  | ((u64)(aa1) << 7) | \
 	((u64)(fst) << 8) | ((u64)(ctxt) << 9) | ((u64)(fix) << 10))
 
-#define GS_SET_DISPFB(fbp, fbw, psm, dbx, dby) \
+#define GS_SET_DISPFB1(fbp, fbw, psm, dbx, dby) \
+	((u64)((fbp)>>13) | ((u64)(fbw/64) << 9) | ((u64)(psm) << 15) | ((u64)(dbx) << 32) | ((u64)(dby) << 43))
+
+#define GS_SET_DISPFB2(fbp, fbw, psm, dbx, dby) \
 	((u64)((fbp)>>13) | ((u64)(fbw/64) << 9) | ((u64)(psm) << 15) | ((u64)(dbx) << 32) | ((u64)(dby) << 43))
 
 #define GS_SET_BITBLTBUF(sbp, sbw, spsm, dbp, dbw, dpsm) \
@@ -213,11 +274,44 @@ typedef struct{
 #define GS_SET_TEXA(ta0, aem, ta1) \
 	((u64)(ta0) | ((u64)(aem) << 15) | ((u64)(ta1) << 32))
 
-#define GS_SET_DISPLAY(width,height,xpos,ypos) \
+/*#define GS_SET_DISPLAY1(width,height,xpos,ypos) \
 	(((u64)(height-1)<<44) | ((u64)0x9FF<<32) | \
 	((((2560+(width-1))/width)-1)<<23) | \
 	(ypos<<12) | (xpos*(2560/width)))
+*/
+/// GS Display Settings Register Access Macro (Output Circuit 1)
+#define GS_SET_DISPLAY1(DX,DY,MAGH,MAGV,DW,DH) \
+        ((u64)(DX)      << 0)   | \
+        ((u64)(DY)      << 12)  | \
+        ((u64)(MAGH)    << 23)  | \
+        ((u64)(MAGV)    << 27)  | \
+        ((u64)(DW)      << 32)  | \
+        ((u64)(DH)      << 44)
 
+/// GS Display Settings Register Access Macro (Output Circuit 2)
+#define GS_SET_DISPLAY2(DX,DY,MAGH,MAGV,DW,DH) \
+        ((u64)(DX)      << 0)   | \
+        ((u64)(DY)      << 12)  | \
+        ((u64)(MAGH)    << 23)  | \
+        ((u64)(MAGV)    << 27)  | \
+        ((u64)(DW)      << 32)  | \
+        ((u64)(DH)      << 44)
+
+/// GS PCRTC (Merge Circuit) Register Access Macro
+#define GS_SET_PMODE(EN1,EN2,MMOD,AMOD,SLBG,ALP) \
+        *GS_PMODE = \
+        ((u64)(EN1)     << 0)   | \
+        ((u64)(EN2)     << 1)   | \
+        ((u64)(001)     << 2)   | \
+        ((u64)(MMOD)    << 5)   | \
+        ((u64)(AMOD)	<< 6)	| \
+        ((u64)(SLBG)	<< 7)	| \
+        ((u64)(ALP)     << 8)
+
+#define GS_SET_SMODE2(INT,FFMD,DPMS) \
+	((u64)(INT)     << 0)   | \
+        ((u64)(FFMD)    << 1)   | \
+        ((u64)(DPMS)    << 2)
 
 // Misc macro's
 

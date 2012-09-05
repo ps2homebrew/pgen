@@ -20,7 +20,6 @@ t_pgenRuntimeSetting pgenRuntimeSetting = {
 		0,		// Save device: Memory card
 
 		85, 50,	// PAL x/y offset
-		85, 26	// NTSC x/y offset
 	}
 };
 
@@ -159,7 +158,7 @@ void initialise()
 	poweroffSetCallback(&powerOffCallback, NULL);
 
 	// Setup default region settings (will be over-written if a config file is found)
-	if(GS_TV_AUTO == GS_TV_NTSC)
+	if(((*((char*)0x1FC7FF52))=='E')+2 == NTSC)
 		pgenRuntimeSetting.settings.defaultRegion = 
 			pgenRuntimeSetting.settings.currentRegion = 2; // USA
 
