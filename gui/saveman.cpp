@@ -270,6 +270,7 @@ int guiSaveManager::updateAndFill()
 	t_pgenSaveBuffer *saveBuffer;
 	int count = 0;
 
+	return 0;
 	freeSpace = currentSaver->saverAIO->freespace();
 	pgenUsed = 0;
 

@@ -809,7 +809,7 @@ int explode ()
 /*
 #ifdef DEBUG
   fprintf(stderr, "<%u > ", hufts);
-#endif /* DEBUG */
+#endif DEBUG */
   return r;
 }
 
