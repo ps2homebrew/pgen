@@ -101,34 +101,13 @@
    |                                                                        |
    | Memory Card                                                            |
    | -----------                                                            |
-   | PGEN can be placed on a memory card and be loaded via Macrus R Brown's |
-   | exploit. Without going into much detail, this will allow you to use    |
-   | PGEN on a completely un-modified PS2 without the need for a swap trick |
-   | or similar. In order to load PGEN via this exploit, you must prepare   |
-   | a special save on your memory card (which will show up in the browser  |
-   | screen as "Your System Configuration"). You can use PGEN as your       |
-   | BOOT.ELF. For more information on setting up this exploit, please see  |
-   | http://www.0xd6.org/ps2-independence.html. PGEN will allow you to load |
-   | rom files stored anywhere on your memory card.                                    |
+   | PGEN can be loaded from memory card by using Free MC Boot.             |
    |                                                                        |
    | HDD (Hard Disk Drive)                                                  |
    | ---------------------                                                  |
    | PGEN can be loaded from a HDD installed in your PS2, and can load roms |
-   | stored on the HDD. At the time of writing, the only application which  |
-   | supports loading PGEN from the HDD is DMS HDD explorer. The HDD        |
-   | Explorer installation CD comes bundled with PGEN, and if you boot HDD  |
-   | Explorer with the installation CD inserted, you can choose to install  |
-   | PGEN and other Dev.olution compatible applications from the CDROM.     |
-   | HDD Explorer is available to DMS customers. Even if you cannot use HDD |
-   | Explorer to load PGEN from the HDD, you may still load roms from the   |
-   | HDD. A utility such as the DMS HDD Dump tool may be used to copy roms  |
-   | from a CD onto the HDD. You must first use the DMS HDD Format tool to  |
-   | create a filesystem on the HDD to store the roms. You will then need   |
-   | to create a CD compilation which contains all the roms you wish to     |
-   | copy to the HDD. Burn as MODE2/XA. You can then use the dump tool to   |
-   | copy the contents of your rom cd to your newly created filesystem on   |
-   | the HDD. The DMS dump tool, format tool and HDD Explorer may be        |
-   | downloaded from http://www.dms3.com                                    |
+   | stored on the HDD. You can load PGEN from internal hard disk drive by  |
+   | using HDD software, BB Navigator or simply uLaunchelf :)               |
    |                                                                        |
    | Notes about the PGEN rom list:                                         |
    | ------------------------------                                         |
@@ -294,6 +273,12 @@
    |                                                                        |
    | Note: Save names prefixed with "(SR)" are SRAM saves. All others are   |
    | saved states.                                                          |
+   |                                                                        |
+   | Gui music:                                                             |
+   | -------------                                                          |
+   | The music used was                                                     |
+   | http://modarchive.org/index.php?request=view_by_moduleid&query=58827   |
+   | credit due to who wrote this fantatic 8bit masterpieces.               |
    +-+                                                                    +-+
    +++--------------------------------------------------------------------+++
    +++--------------------------------------------------------------------+++
@@ -308,34 +293,18 @@
    |            a "swap trick". Please see http://www.ps2newz.net for more  |
    |            information about modchips and the swap trick.              |
    |          * A way to get PGEN and roms onto your memory card, for use   |
-   |            with Marcus R Browns "PS2 Independence" expliot. This will  |
-   |            allow you to use PGEN on an unmodified PS2 without the use  |
-   |            of a swap trick. Please see                                 |
-   |            http://www.0xd6.org/ps2-independence.html for more info.    |
+   |            with Free MC Boot. For more information please see          |
+   |            http://psx-scene.com/forums/official-free-mc-boot-forums/   |
    |          * A HDD installed in your PS2 and a way to boot appplications |
-   |            from the HDD. At the time of writing, only DMS HDD explorer |
-   |            is capable of running applications stored on a HDD. This is |
-   |            available to DMS customers.                                 |
+   |            from the HDD. to my mind the best way to do it is to        |
+   |            install Free MC Boot on your HDD.                           |
    |                                                                        |
    | 2) Ok, I downloaded all the files off the website. How do I make a cd? |
    |                                                                        |
-   |        There is a step-by-step guide, (with pictures), on how to get   |
-   |        you going. You can find this in the downloads section of the    |
-   |        PGEN website.                                                   |
+   |        You can take a CD example from                                  |
+   |        https://bitbucket.org/AKuHAK/pgen/downloads/pgen_test.zip       |
    |                                                                        |
-   | 3) I burned the cd but it doesn't work.  What now?                     |
-   |                                                                        |
-   |        If you want more help, vist us at #ps2-emulation on Efnet or    |
-   |        post on the forums at http://pgen.gamebase.ca.                  |
-   |                                                                        |
-   | 4) I downloaded a bin/cue from somewhere but it doesn't work.  Can you |
-   |    help me?                                                            |
-   |                                                                        |
-   |        No.  We do not condone distribution of so-called "rompacks."    |
-   |        Use the directions at the PGEN website or forums to make your   |
-   |        own compilation CD.                                             |
-   |                                                                        |
-   | 5) Sound is too slow/fast!                                             |
+   | 3) Sound is too slow/fast!                                             |
    |                                                                        |
    |        If possible, make sure that the emulated video mode is the      |
    |        same as your PS2 video mode. If the emulated video mode does    |
@@ -345,10 +314,20 @@
    |        video mode, than the game will run 20% faster than it should,   |
    |        which means that the music will run 20% faster too.             |
    |                                                                        |
-   | 6) Can I come on to the #ps2-emulation IRC channel or the PGEN forum   |
-   |    and request roms?                                                   |
+   | 4) PGEN saving into memory card takes up to 5 minutes.                 |
    |                                                                        |
-   |        No. If you try this, you will be banned.                        |
+   |        Yep this is PGEN related bugs if you are using bad memory or    |
+   |        memory card with a little bit broken structure. Unfortunately   |
+   |        for now there is no way to fix this. You can try to press POWER |
+   |        button on your PS2 to interrupt the process and try again.      |
+   |                                                                        |
+   | 5) Sometimes PGEN was frozen. What can i do if it is happened?         |
+   |                                                                        |
+   |        You can try to press POWER button.                              |
+   |                                                                        |
+   | 6) POWER button ddoesn't switch off the console.                       |
+   |                                                                        |
+   |        Thu can try to press POWER button.                              |
    |                                                                        |
    | 7) I cant load my saved states from earlier PGEN releases, what gives? |
    |                                                                        |
@@ -358,9 +337,21 @@
    +-+                                                                    +-+
    +++--------------------------------------------------------------------+++
    +++--------------------------------------------------------------------+++
-   ++|                             History                                |++
+   ++|                    Outdated History                                |++
    +++--------------------------------------------------------------------+++
    +-+                                                                    +-+
+   |                                                                        |
+   |   v1.5.1s - Changes include:                                           |
+   |                                                                        |   
+   | This is Pgen 1.51.s with a new look and modified to work on a ps2      |
+   | compatible ps3. The new ps3 look was done by Samson from ps3hax. The   |
+   | modifications for the ps3 were done by aries2k. This version doesn´t   |
+   | support hdd saving. I had to deactivate the hdd modules for the elf to |
+   | load. All references to naplink were removed. The SifIopReset sequence |
+   | was removed and replaced with the one from uLaunch.elf by E.P and      |
+   | dlanor. All necessary .Irx modules have been embedded in the elf.The   |
+   | Irx module are all 100% homebrew from the ps2 homebrew sdk. :)         |
+   | No copyrighted Sony ps2 bios modules are used.                         |
    |                                                                        |
    |   18th March, 2007: v1.5.1 - Changes include:                          |
    |                                                                        |   
@@ -439,13 +430,16 @@
    ++|                             Contact                                |++
    +++--------------------------------------------------------------------+++
    +-+                                                                    +-+
-   | PGEN Homepage: http://pgen.gamebase.ca                                 |
+   | PGEN Homepage: https://bitbucket.org/AKuHAK/pgen                       |
    |                                                                        |
-   | Nick Van Veen (aka Sjeep) - PGEN Author                                |
+   | AKuHAK: new pgen developer                                             |
+   | - e-mail: akuhak@gmail.com                                             |
+   |                                                                        |
+   |                                                                        |
+   | Nick Van Veen (aka Sjeep) - PGEN Author (stop working on emulator)     |
    | - e-mail: sjeep@gamebase.ca                                            |
    | - IRC: Sjeep, on EFNet                                                 |
    |                                                                        |
-   | For PS2-Emulation related news, please visit #ps2-emulation on EFNet   |
    +-+                                                                    +-+
    +++--------------------------------------------------------------------+++
    +++--------------------------------------------------------------------+++
@@ -491,9 +485,7 @@
    |                                                                        |
    |    Hiryu for gsLib and libCDVD, for his continual help and support     |
    |                                                                        |
-   |  Everybody involved in the development of Naplink and pukklink/ps2link |
-   |                                                                        |
-   |        The Unknown artists who composed the excellent MOD files        |
+   |        The Unknown artists who composed the excellent MOD file         |
    |                            used in the menu                            |
    |                                                                        |
    | [vEX], Bgnome and MoRpHiUs for creating tutorials, documents, websites |
