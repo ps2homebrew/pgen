@@ -54,9 +54,9 @@ pgenRom *pgenMenu(int fadeIn)
 						(PAD_L1 | PAD_L2 | PAD_R1 | PAD_R2))
 		{
 			if(padRepeat & PAD_SELECT)
-				gfxChangeDefaultVideoMode(GS_TV_PAL);
+				gfxChangeDefaultVideoMode(PAL);
 			else if(padRepeat & PAD_START)
-				gfxChangeDefaultVideoMode(GS_TV_NTSC);
+				gfxChangeDefaultVideoMode(NTSC);
 		}
 
 		status = currentGui->getStatus();
@@ -119,8 +119,8 @@ void guiDrawScroll()
 	// lines - I later found out it was only 224. Dont wanna re-design the whole thing just
 	// because of this small issue ;)
 	int dif=0;
-	if(pgenRuntimeSetting.guiVideoMode != GS_TV_PAL)
-		dif=0;
+/*	if(pgenRuntimeSetting.guiVideoMode != GS_TV_PAL)
+		dif=0;*/
 //		return;
 
 	// HACK: scrollX = 310 instead of 320, as it seems to fix weird bug
@@ -584,22 +584,8 @@ void guiUpdateDisplayPosition()
 	else
 		currentVideoMode = pgenRuntimeSetting.gameVideoMode;
 
-	/*switch(currentVideoMode)
-	{
-		case GS_TV_PAL:*/
-				
-			dispDriver->setDisplayPosition(pgenRuntimeSetting.settings.dispXPAL,
-				pgenRuntimeSetting.settings.dispYPAL);
-
-			/*break;
-
-		case GS_TV_NTSC:
-
-			dispDriver->setDisplayPosition(pgenRuntimeSetting.settings.dispXPAL,
-				pgenRuntimeSetting.settings.dispYPAL-24);
-
-			break;
-	}*/
+	dispDriver->setDisplayPosition(pgenRuntimeSetting.settings.dispX,
+		pgenRuntimeSetting.settings.dispY);
 }
 
 void guiDoDisplayCalibrate()
@@ -651,39 +637,16 @@ void guiDoDisplayCalibrate()
 
 		if(diffx || diffy)
 		{
-			/*switch(currentVideoMode)
-			{
-				case GS_TV_PAL:*/
-				
-					pgenRuntimeSetting.settings.dispXPAL += diffx;
-					pgenRuntimeSetting.settings.dispYPAL += diffy;
+			pgenRuntimeSetting.settings.dispX += diffx;
+			pgenRuntimeSetting.settings.dispY += diffy;
 
-					if(pgenRuntimeSetting.settings.dispXPAL < 0)
-						pgenRuntimeSetting.settings.dispXPAL = 0;
-					if(pgenRuntimeSetting.settings.dispYPAL < 0)
-						pgenRuntimeSetting.settings.dispYPAL = 0;
+			if(pgenRuntimeSetting.settings.dispX < 0)
+				pgenRuntimeSetting.settings.dispX = 0;
+			if(pgenRuntimeSetting.settings.dispY < 0)
+				pgenRuntimeSetting.settings.dispY = 0;
 
-					dispDriver->setDisplayPosition(pgenRuntimeSetting.settings.dispXPAL,
-						pgenRuntimeSetting.settings.dispYPAL);
-				
-					/*break;
-
-				case GS_TV_NTSC:
-
-					pgenRuntimeSetting.settings.dispXNTSC += diffx;
-					pgenRuntimeSetting.settings.dispYNTSC += diffy;
-
-					if(pgenRuntimeSetting.settings.dispXNTSC < 0)
-						pgenRuntimeSetting.settings.dispXNTSC = 0;
-					if(pgenRuntimeSetting.settings.dispYNTSC < 0)
-						pgenRuntimeSetting.settings.dispYNTSC = 0;
-
-				//case GS_TV_NTSC:
-					dispDriver->setDisplayPosition(pgenRuntimeSetting.settings.dispXPAL,
-						pgenRuntimeSetting.settings.dispYPAL-24);
-
-					break;
-			}*/
+			dispDriver->setDisplayPosition(pgenRuntimeSetting.settings.dispX,
+				pgenRuntimeSetting.settings.dispY);
 		}
 
 		guiUpdateScreen();

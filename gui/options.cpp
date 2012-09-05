@@ -78,10 +78,10 @@ void guiOptionsMenu::updateOptionString()
 	strcpy(&optionString[8][0], "Video Mode: ");
 	switch(pgenRuntimeSetting.guiVideoMode)
 	{
-			case GS_TV_NTSC:
+			case NTSC:
 				strcat(&optionString[8][0], "NTSC");
 				break;
-			case GS_TV_PAL:
+			case PAL:
 				strcat(&optionString[8][0], "PAL");
 				break;
 	}

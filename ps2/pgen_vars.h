@@ -17,8 +17,7 @@ typedef struct
 	u8 displayFps;				// 0 = Off, 1 = On
 	u8 saveDevice;				// 0 = Memory Card, 1 = HDD
 	
-	u8 dispXPAL, dispYPAL;		// X & Y offset parameters for both
-	u8 dispXNTSC, dispYNTSC;	// PAL and NTSC display modes.
+	u16 dispX, dispY;		// X & Y offset parameters for both PAL and NTSC display modes.
 
 } t_pgenSettings;
 

@@ -135,11 +135,11 @@ int pgenRom::loadRom()
 		{
 			case 0:
 			case 2:
-				pgenRuntimeSetting.gameVideoMode = GS_TV_NTSC;
+				pgenRuntimeSetting.gameVideoMode = NTSC;
 				gfxUpdateIngameVideoMode();
 				break;
 			case 3:
-				pgenRuntimeSetting.gameVideoMode = GS_TV_PAL;
+				pgenRuntimeSetting.gameVideoMode = PAL;
 				gfxUpdateIngameVideoMode();
 				break;
 		}

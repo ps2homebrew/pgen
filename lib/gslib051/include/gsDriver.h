@@ -20,19 +20,20 @@ class gsDriver
 {
 public:
 	// Default constructor, should setup default display environment
-	gsDriver();
+	gsDriver(gsMode mode);
 	~gsDriver();
 
 	// Setup Display for specified size, mode, and number of buffers
 	void setDisplayMode(unsigned int width, unsigned int height,
-		unsigned int xpos, unsigned int ypos,
-		unsigned int psm, unsigned int num_bufs,
-		unsigned int TVmode, unsigned int TVinterlace,
-		unsigned int zbuffer, unsigned int zpsm);
+		gsMode mode, gsInterlace interlace,
+		unsigned int psm, unsigned int zbuffer,
+		unsigned int zpsm, unsigned int num_bufs);
 
 	void clearScreen(void);
 
 	void setDisplayPosition(unsigned int xpos, unsigned int ypos);
+	unsigned int getDisplayXPosition();
+	unsigned int getDisplayYPosition();
 
 	// Get the location of the frame buffer or texture buffer
 	unsigned int getFrameBufferBase(unsigned int fb_num);
@@ -64,33 +65,13 @@ public:
 
 	static gsTexSize getTexSizeFromInt(int texsize)
 	{
-		// Get the size in 2^X of texsize
-		int pow2 = 0x0400; // exact power of 2
-		int i;
+		int res;
+		int ts;
 
-		// special case for 0
-		if (texsize == 0)
-			return (gsTexSize)0;
+		__asm__ __volatile__("    plzcw   %0, %1    " : "=r" (res) : "r" (texsize));
+		ts = ((texsize > 1<<(30 - res)) ? 31-res : 30-res);
 
-		for (i=10; i>=0; i--)
-		{
-			// If texsize = exact 2^X
-			if (texsize == pow2)
-			{
-				return (gsTexSize)i;
-			}
-
-			// check if texsize is bigger than the next lower power of 2
-			// (also handles the case of a texsize > 1024)
-			if (texsize > (pow2>>1))
-			{
-				return (gsTexSize)(i);
-			}
-
-			pow2 = pow2 >> 1;
-		}
-
-		return (gsTexSize)0;
+		return (gsTexSize)(ts);
 	}
 
 	static void WaitForVSync(void)
@@ -98,7 +79,6 @@ public:
 		GS_CSR &= 8; // generate
 		while(!(GS_CSR & 8)); // wait until its generated
 	}
-
 
 	//VSync Interrupt Handler Routines 
 	unsigned int AddVSyncCallback(void (*func_ptr)());
@@ -157,12 +137,28 @@ private:
 	void setDisplayBuffer(unsigned int buf_num);
 	void setDrawBuffer(unsigned int buf_num);
 
+	// Set the mode and attributes
+	void setFrameOffsets();
+	void setFrameMagnification();
+	void setFrameArea();
 
+	unsigned int m_FrameWidth;
+	unsigned int m_FrameHeight;
+	unsigned int m_FrameDX;		// X Offset in frame buffer
+	unsigned int m_FrameDY;		// Y Offset in frame buffer
+	unsigned int m_FrameMAGH;	// Horizontal magnification
+	unsigned int m_FrameMAGV;	// Vertical magnification
+	unsigned int m_FrameDW;		// Total display area width
+	unsigned int m_FrameDH;		// Total display area height
 
-	unsigned int m_FrameWidth;			// Width of frame buffers
-	unsigned int m_FrameHeight;			// Height of frame buffers
-	unsigned int m_FrameXpos;			// X positiion of frame
-	unsigned int m_FrameYpos;			// Y positiion of frame
+	signed short m_DisplayMode;
+	signed short m_InterlaceMode;
+
+	//unsigned int m_FrameWidth;			// Width of frame buffers
+	//unsigned int m_FrameHeight;			// Height of frame buffers
+	//unsigned int m_FrameXpos;			// X positiion of frame
+	//unsigned int m_FrameYpos;			// Y positiion of frame
+
 	unsigned int m_FramePSM;			// PSM of frame buffers
 	unsigned int m_ZBuffer;				// ZBuffer used ? 0:1
 	unsigned int m_ZBufferPSM;			// PSM of ZBuffer
@@ -185,4 +181,4 @@ private:
 	//struct gsDrawEnv m_DrawEnv __attribute__((aligned(16)));
 };
 
-#endif /* _HW1_H_ */
+#endif /* _GSDRIVER_H_ */
