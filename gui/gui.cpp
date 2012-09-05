@@ -640,11 +640,6 @@ void guiDoDisplayCalibrate()
 			pgenRuntimeSetting.settings.dispX += diffx;
 			pgenRuntimeSetting.settings.dispY += diffy;
 
-			if(pgenRuntimeSetting.settings.dispX < 0)
-				pgenRuntimeSetting.settings.dispX = 0;
-			if(pgenRuntimeSetting.settings.dispY < 0)
-				pgenRuntimeSetting.settings.dispY = 0;
-
 			dispDriver->setDisplayPosition(pgenRuntimeSetting.settings.dispX,
 				pgenRuntimeSetting.settings.dispY);
 		}

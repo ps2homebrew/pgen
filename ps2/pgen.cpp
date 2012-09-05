@@ -212,7 +212,7 @@ void initialise()
 
 void loadModules()
 {
-	char ifConfig[] = "192.168.0.23\000255.255.255.0\000192.168.0.1\000";
+//	char ifConfig[] = "192.168.0.23\000255.255.255.0\000192.168.0.1\000";
 
 	loadModuleBuffer(freesio2Irx, 102400, 0, NULL);	
 	loadModuleBuffer(freemtapIrx, 102400, 0, NULL);	

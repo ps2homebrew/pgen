@@ -59,6 +59,8 @@ int pgenEmuState::load()
 {
 	if(empty)
 		return -1;
+	else
+		return 0;
 
 	memcpy(vdp_vram, state.vdp_vram, 64*1024);
 	memcpy(vdp_cram, state.vdp_cram, 128);
@@ -143,6 +145,7 @@ int pgenEmuState::loadState()
 	int rv;
 	t_pgenSaveBuffer saveBuffer;
 
+	return 0;
 	// Read in file
 	char openFilename[256];
 	if(!strcmp(currentSaver->savePath, "/"))
