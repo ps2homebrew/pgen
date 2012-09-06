@@ -19,20 +19,18 @@ t_pgenRuntimeSetting pgenRuntimeSetting = {
 		0,		// FPS counter: Off
 		0,		// Save device: Memory card
 
-		680, 37,	// PAL x/y offset
+		680, 37		// PAL x/y offset
 	},
 	0,
-	{
-		,		//a = square
-		,		//b = X
-		,		//c = Circle
-		,		//x = L1
-		,		//y = R1
-		,		//z = R2
-		,		//start = Start
-		,		//L2 = Mode
-		,		//Select = Pause
-	}
+	PAD_SQUARE,	//a = square
+	PAD_CROSS,	//b = X
+	PAD_CIRCLE,	//c = Circle
+	PAD_L1,		//x = L1
+	PAD_R1,		//y = R1
+	PAD_R2,		//z = R2
+	PAD_START,	//start = Start
+	PAD_L2,		//L2 = Mode
+	PAD_SELECT	//Select = Pause
 };
 
 int pgenRunning;

@@ -42,7 +42,7 @@ void gen_loadmemrom(const char *rom, int romlen);
   		    (((y) >> 8)  & 0x0000ff00) | \
   		    (((y) << 8)  & 0x00ff0000) | \
           (((y) << 24) & 0xff000000) )
-  #warning "No native byte conversion"
+//  #warning "No native byte conversion"
 #endif
 
 /*
