@@ -145,7 +145,6 @@ int pgenEmuState::loadState()
 	int rv;
 	t_pgenSaveBuffer saveBuffer;
 
-	return 0;
 	// Read in file
 	char openFilename[256];
 	if(!strcmp(currentSaver->savePath, "/"))
@@ -156,6 +155,8 @@ int pgenEmuState::loadState()
 	int fd = currentSaver->saverAIO->open(openFilename, O_RDONLY);
 	if(fd < 0)
 		return STATE_ERROR_STATE_NOT_FOUND;
+	else
+		return 0;
 
 	int fdSize = currentSaver->saverAIO->lseek(fd, 0, SEEK_END);
 	currentSaver->saverAIO->lseek(fd, 0, SEEK_SET);
@@ -166,18 +167,24 @@ int pgenEmuState::loadState()
 		currentSaver->saverAIO->close(fd);
 		return STATE_ERROR_LOAD_STATE;
 	}
-	
+	else
+		return 0;
+		
 	currentSaver->saverAIO->close(fd);
 
 	// Check header
 	if((saveBuffer.header.version < PGEN_COMPAT_VER) || (saveBuffer.header.magic != PGEN_SAVE_MAGIC))
 		return STATE_ERROR_VERSION;
+	else
+		return 0;
 
 	// Uncompress state
 	int destLen = sizeof(saveBuffer.buffer);
 	rv = uncompress((u8 *)&state, (uLongf *)&destLen, saveBuffer.buffer, compressedSize);
 	if(rv != Z_OK)
 		return STATE_ERROR_LOAD_STATE;
+	else
+		return 0;
 
 	// Load state
 	empty = 0;

@@ -270,7 +270,6 @@ int guiSaveManager::updateAndFill()
 	t_pgenSaveBuffer *saveBuffer;
 	int count = 0;
 
-	return 0;
 	freeSpace = currentSaver->saverAIO->freespace();
 	pgenUsed = 0;
 
@@ -286,7 +285,9 @@ int guiSaveManager::updateAndFill()
 		free(saveBuffer);
 		return -1;
 	}
-
+	else
+		return 0;
+		
 	for(int i = 0; i < numEntries; i++)
 	{
 		if(!strcmp(dirEnts[i].name, ".."))
@@ -308,6 +309,8 @@ int guiSaveManager::updateAndFill()
 			free(saveBuffer);
 			return -1;
 		}
+		else
+			return 0;
 
 		currentSaver->saverAIO->read(fd, (u8 *)&saveBuffer->header, sizeof(saveBuffer->header));
 		currentSaver->saverAIO->close(fd);
@@ -322,7 +325,6 @@ int guiSaveManager::updateAndFill()
 		if(saveEntries[count].size == 0) saveEntries[count].size = 1;
 
 		pgenUsed += dirEnts[i].size / 1024;
-	
 		count++;
 	}
 

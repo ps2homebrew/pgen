@@ -86,16 +86,48 @@ void guiOptionsMenu::updateOptionString()
 				break;
 	}
 
-	strcpy(&optionString[9][0], "Save device: ");
+	strcpy(&optionString[9][0], "Button remapping: ");
+	switch(pgenRuntimeSetting.input.pgenRuntimeSetting.xpressed)
+	{
+			case 0:
+				strcat(&optionString[9][0], "a");
+				break;
+			case 1:
+				strcat(&optionString[9][0], "b");
+				break;			
+			case 2:
+				strcat(&optionString[9][0], "c");
+				break;			
+			case 3:
+				strcat(&optionString[9][0], "x");
+				break;			
+			case 4:
+				strcat(&optionString[9][0], "y");
+				break;			
+			case 5:
+				strcat(&optionString[9][0], "z");
+				break;			
+			case 6:
+				strcat(&optionString[9][0], "start");
+				break;			
+			case 7:
+				strcat(&optionString[9][0], "mode");
+				break;			
+			case 8:
+				strcat(&optionString[9][0], "pause");
+				break;	
+	}
+
+	strcpy(&optionString[10][0], "Save device: ");
 	if(pgenRuntimeSetting.settings.saveDevice == 0)
-		strcat(&optionString[9][0], "Memory Card");
+		strcat(&optionString[10][0], "Memory Card");
 	else
-		strcat(&optionString[9][0], "HDD");
+		strcat(&optionString[10][0], "HDD");
 }
 
 void guiOptionsMenu::draw()
 {
-	int yPos = 85;
+	int yPos = 72;
 
 	switch(flag)
 	{
@@ -161,14 +193,15 @@ void guiOptionsMenu::draw()
 
 void guiOptionsMenu::update(u32 padRepeat, u32 padNoRepeat)
 {
+	int pgenRuntimeSetting.xpressed=0;
 	if((padNoRepeat & PAD_UP) && (selection > 0))
 	{
 		selection--;
 	}
 	else if(padNoRepeat & PAD_DOWN)
 	{
-		if(	((pgenRuntimeSetting.HDDFormatted) && (selection < 9)) ||
-			((!pgenRuntimeSetting.HDDFormatted) && (selection < 8)) )
+		if(	((pgenRuntimeSetting.HDDFormatted) && (selection < 10)) ||
+			((!pgenRuntimeSetting.HDDFormatted) && (selection < 9)) )
 				selection++;
 	}
 	else if(padRepeat & PAD_TRIANGLE)
@@ -248,6 +281,14 @@ void guiOptionsMenu::update(u32 padRepeat, u32 padNoRepeat)
 				break;
 
 			case 9:	// Save device
+
+				pgenRuntimeSetting.xpressed++;
+				if(pgenRuntimeSetting.xpressed > 8)
+					pgenRuntimeSetting.xpressed=0;
+				//TODO: updateInput();
+				break;
+
+			case 10:	// Save device
 
 				pgenRuntimeSetting.settings.saveDevice ^= 1;
 
