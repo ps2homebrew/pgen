@@ -23,6 +23,16 @@ typedef struct
 
 typedef struct
 {
+	u16 a, b, c;		// a, b, c buttons
+	u16 x, y, z;		// x, y, z buttons	
+	u16 start;		// start button
+	u16 mode;		// mode button
+	u16 pause;		// execingame
+
+} t_pgenInput;
+
+typedef struct
+{
 	int HDDAvailable, HDDFormatted;
 
 	int gameVideoMode, guiVideoMode;
@@ -31,6 +41,10 @@ typedef struct
 	int multiTapConnected;
 
 	t_pgenSettings settings;
+
+	int xpressed;
+
+	t_pgenInput input;
 
 } t_pgenRuntimeSetting;
 

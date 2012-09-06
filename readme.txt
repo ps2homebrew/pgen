@@ -142,7 +142,7 @@
    |   C       - Circle                                                     |
    |   X       - L1                                                         |
    |   Y       - R1                                                         |
-   |   Z       - Triangle                                                   |
+   |   Z       - R2                                                   |
    |   Mode    - L2                                                         |
    |                                                                        |
    |   Select on PS2 controller = enter ingame menu                         |
