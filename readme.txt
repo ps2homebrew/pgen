@@ -301,7 +301,7 @@
    | 2) Ok, I downloaded all the files off the website. How do I make a cd? |
    |                                                                        |
    |        You can take a CD example from                                  |
-   |        https://bitbucket.org/AKuHAK/pgen/downloads/pgen_test.zip       |
+   |        http://depositfiles.com/files/gnw56fthk       |
    |                                                                        |
    | 3) Sound is too slow/fast!                                             |
    |                                                                        |
