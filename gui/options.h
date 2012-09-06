@@ -13,7 +13,7 @@ class guiOptionsMenu : public guiComponentIf
 
 			void updateOptionString();
 
-			char optionString[10][64];
+			char optionString[11][64];
 			int selection;
 
 };

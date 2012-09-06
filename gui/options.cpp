@@ -87,31 +87,31 @@ void guiOptionsMenu::updateOptionString()
 	}
 
 	strcpy(&optionString[9][0], "Button remapping: ");
-	switch(pgenRuntimeSetting.input.pgenRuntimeSetting.xpressed)
+	switch(pgenRuntimeSetting.xpressed)
 	{
 			case 0:
-				strcat(&optionString[9][0], "a");
+				strcat(&optionString[9][0], "A");
 				break;
 			case 1:
-				strcat(&optionString[9][0], "b");
+				strcat(&optionString[9][0], "B");
 				break;			
 			case 2:
-				strcat(&optionString[9][0], "c");
+				strcat(&optionString[9][0], "C");
 				break;			
 			case 3:
-				strcat(&optionString[9][0], "x");
+				strcat(&optionString[9][0], "X");
 				break;			
 			case 4:
-				strcat(&optionString[9][0], "y");
+				strcat(&optionString[9][0], "Y");
 				break;			
 			case 5:
-				strcat(&optionString[9][0], "z");
+				strcat(&optionString[9][0], "Z");
 				break;			
 			case 6:
-				strcat(&optionString[9][0], "start");
+				strcat(&optionString[9][0], "START");
 				break;			
 			case 7:
-				strcat(&optionString[9][0], "mode");
+				strcat(&optionString[9][0], "MODE");
 				break;			
 			case 8:
 				strcat(&optionString[9][0], "pause");
@@ -171,11 +171,11 @@ void guiOptionsMenu::draw()
 
 			updateAlpha();
 
-			for(int i = 0; i < 10; i++)
+			for(int i = 0; i < 11; i++)
 			{
 				u32 color;
 
-				if((i == 9) && (!pgenRuntimeSetting.HDDFormatted))
+				if((i == 10) && (!pgenRuntimeSetting.HDDFormatted))
 					color = GS_SET_RGBA(0x55, 0x55, 0x55, 180);
 				else if(i == selection)
 					color = GS_SET_RGBA(0x80, 0x80, 0x80, alpha);
@@ -193,7 +193,6 @@ void guiOptionsMenu::draw()
 
 void guiOptionsMenu::update(u32 padRepeat, u32 padNoRepeat)
 {
-	int pgenRuntimeSetting.xpressed=0;
 	if((padNoRepeat & PAD_UP) && (selection > 0))
 	{
 		selection--;
@@ -204,7 +203,7 @@ void guiOptionsMenu::update(u32 padRepeat, u32 padNoRepeat)
 			((!pgenRuntimeSetting.HDDFormatted) && (selection < 9)) )
 				selection++;
 	}
-	else if(padRepeat & PAD_TRIANGLE)
+	else if(padRepeat & PAD_LEFT)
 	{
 		pgenOptionsSave();
 		flag = GUI_FLAG_ANIM_CLOSE;
@@ -280,13 +279,13 @@ void guiOptionsMenu::update(u32 padRepeat, u32 padNoRepeat)
 
 				break;
 
-			case 9:	// Save device
+			/*case 9:	// Save device
 
 				pgenRuntimeSetting.xpressed++;
 				if(pgenRuntimeSetting.xpressed > 8)
 					pgenRuntimeSetting.xpressed=0;
 				//TODO: updateInput();
-				break;
+				break;*/
 
 			case 10:	// Save device
 
@@ -300,6 +299,68 @@ void guiOptionsMenu::update(u32 padRepeat, u32 padNoRepeat)
 				break;
 		}
 
+		updateOptionString();
+	}
+	if (selection == 9)
+	{
+		if (padNoRepeat & PAD_CROSS)
+		{
+			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_CROSS;
+			pgenRuntimeSetting.xpressed++;
+		}
+		else if(padNoRepeat & PAD_SQUARE)
+		{
+			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_SQUARE;
+			pgenRuntimeSetting.xpressed++;
+		}
+		else if(padNoRepeat & PAD_TRIANGLE)
+		{
+			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_TRIANGLE;
+			pgenRuntimeSetting.xpressed++;
+		}
+		else if (padNoRepeat & PAD_CIRCLE)
+		{
+			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_CIRCLE;
+			pgenRuntimeSetting.xpressed++;
+		}
+		else if (padNoRepeat & PAD_L1)
+		{
+			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_L1;
+			pgenRuntimeSetting.xpressed++;
+		}
+		else if (padNoRepeat & PAD_L2)
+		{
+			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_L2;
+			pgenRuntimeSetting.xpressed++;
+		}
+		else if (padNoRepeat & PAD_L3)
+		{
+			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_R1;
+			pgenRuntimeSetting.xpressed++;
+		}
+		else if (padNoRepeat & PAD_R2)
+		{
+			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_R2;
+			pgenRuntimeSetting.xpressed++;
+		}
+		else if (padNoRepeat & PAD_R3)
+		{
+			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_R3;
+			pgenRuntimeSetting.xpressed++;
+		}
+		else if(padNoRepeat & PAD_START)
+		{
+			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_START;
+			pgenRuntimeSetting.xpressed++;
+		}
+		else if(padNoRepeat & PAD_SELECT)
+		{
+			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_SELECT;
+			pgenRuntimeSetting.xpressed++;
+		}
+		
+		if(pgenRuntimeSetting.xpressed > 8)
+			pgenRuntimeSetting.xpressed=0;
 		updateOptionString();
 	}
 }

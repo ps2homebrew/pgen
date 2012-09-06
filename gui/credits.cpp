@@ -149,6 +149,9 @@ void guiCredits::draw()
 			zerohourFont.Print(20, 300, 80, Z_SCROLL_M3, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80), 
 				GSFONT_ALIGN_CENTRE, "Credits");
 
+			ocraFont.Print(20, 300, 202, Z_SCROLL_M3, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80), 
+				GSFONT_ALIGN_LEFT, "Press LEFT to escape");
+
 			drawPipe->setScissorRect(20, 96, 300, 200);
 				ocraFont.Print(20, 300, scrollY, Z_LIST, GS_SET_RGBA(0x80, 0x80, 0x80, 180),
 				GSFONT_ALIGN_CENTRE, creditText);
@@ -173,6 +176,6 @@ void guiCredits::draw()
 
 void guiCredits::update(u32 padRepeat, u32 padNoRepeat)
 {
-	if(padNoRepeat & PAD_TRIANGLE)
+	if(padNoRepeat & PAD_LEFT)
 		flag = GUI_FLAG_ANIM_CLOSE;
 }

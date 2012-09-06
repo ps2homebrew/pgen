@@ -63,7 +63,6 @@
    +++--------------------------------------------------------------------+++
    +-+                                                                    +-+
    | - Re-write rendering engine (to get 100% speed in ALL games)           |
-   | - Configurable controls                                                |
    | - Fix any remaining bugs                                               |
    | - Change base emultaor to improve compatability                        |
    +-+                                                                    +-+
@@ -130,7 +129,7 @@
    +-+                                                                    +-+
    +++--------------------------------------------------------------------+++
    +++--------------------------------------------------------------------+++
-   ++|                         In-Game Controls                           |++
+   ++|                      Default In-Game Controls                        |++
    +++--------------------------------------------------------------------+++
    +-+                                                                    +-+
    |   Genesis - PS2                                                        |
@@ -148,7 +147,7 @@
    |   Select on PS2 controller = enter ingame menu                         |
    |                                                                        |
    | NOTE: If you are having problems with 6-button gamepad emulation, or   |
-   |       just want to disable it, hold down L2 when starting a game to    |
+   |       just want to disable it, hold down Mode when starting a game to  |
    |       forcefully disable 6-button gamepad emulation.                   |
    +-+                                                                    +-+
    +++--------------------------------------------------------------------+++
