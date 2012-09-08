@@ -193,6 +193,7 @@ void guiOptionsMenu::draw()
 
 void guiOptionsMenu::update(u32 padRepeat, u32 padNoRepeat)
 {
+	int i=0;
 	if((padNoRepeat & PAD_UP) && (selection > 0))
 	{
 		selection--;
@@ -279,14 +280,6 @@ void guiOptionsMenu::update(u32 padRepeat, u32 padNoRepeat)
 
 				break;
 
-			/*case 9:	// Save device
-
-				pgenRuntimeSetting.xpressed++;
-				if(pgenRuntimeSetting.xpressed > 8)
-					pgenRuntimeSetting.xpressed=0;
-				//TODO: updateInput();
-				break;*/
-
 			case 10:	// Save device
 
 				pgenRuntimeSetting.settings.saveDevice ^= 1;
@@ -305,60 +298,64 @@ void guiOptionsMenu::update(u32 padRepeat, u32 padNoRepeat)
 	{
 		if (padNoRepeat & PAD_CROSS)
 		{
-			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_CROSS;
+			pgenRuntimeSetting.settings.input[pgenRuntimeSetting.xpressed] = PAD_CROSS;
 			pgenRuntimeSetting.xpressed++;
 		}
-		else if(padNoRepeat & PAD_SQUARE)
+		else if (padNoRepeat & PAD_SQUARE)
 		{
-			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_SQUARE;
+			pgenRuntimeSetting.settings.input[pgenRuntimeSetting.xpressed] = PAD_SQUARE;
 			pgenRuntimeSetting.xpressed++;
 		}
-		else if(padNoRepeat & PAD_TRIANGLE)
+		else if (padNoRepeat & PAD_TRIANGLE)
 		{
-			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_TRIANGLE;
+			pgenRuntimeSetting.settings.input[pgenRuntimeSetting.xpressed] = PAD_TRIANGLE;
 			pgenRuntimeSetting.xpressed++;
 		}
 		else if (padNoRepeat & PAD_CIRCLE)
 		{
-			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_CIRCLE;
+			pgenRuntimeSetting.settings.input[pgenRuntimeSetting.xpressed] = PAD_CIRCLE;
 			pgenRuntimeSetting.xpressed++;
 		}
 		else if (padNoRepeat & PAD_L1)
 		{
-			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_L1;
+			pgenRuntimeSetting.settings.input[pgenRuntimeSetting.xpressed] = PAD_L1;
 			pgenRuntimeSetting.xpressed++;
 		}
 		else if (padNoRepeat & PAD_L2)
 		{
-			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_L2;
+			pgenRuntimeSetting.settings.input[pgenRuntimeSetting.xpressed] = PAD_L2;
 			pgenRuntimeSetting.xpressed++;
 		}
 		else if (padNoRepeat & PAD_L3)
 		{
-			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_R1;
+			pgenRuntimeSetting.settings.input[pgenRuntimeSetting.xpressed] = PAD_R1;
+			pgenRuntimeSetting.xpressed++;
+		}
+		else if (padNoRepeat & PAD_R1)
+		{
+			pgenRuntimeSetting.settings.input[pgenRuntimeSetting.xpressed] = PAD_R1;
 			pgenRuntimeSetting.xpressed++;
 		}
 		else if (padNoRepeat & PAD_R2)
 		{
-			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_R2;
+			pgenRuntimeSetting.settings.input[pgenRuntimeSetting.xpressed] = PAD_R2;
 			pgenRuntimeSetting.xpressed++;
 		}
 		else if (padNoRepeat & PAD_R3)
 		{
-			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_R3;
+			pgenRuntimeSetting.settings.input[pgenRuntimeSetting.xpressed] = PAD_R3;
 			pgenRuntimeSetting.xpressed++;
 		}
-		else if(padNoRepeat & PAD_START)
+		else if (padNoRepeat & PAD_START)
 		{
-			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_START;
+			pgenRuntimeSetting.settings.input[pgenRuntimeSetting.xpressed] = PAD_START;
 			pgenRuntimeSetting.xpressed++;
 		}
-		else if(padNoRepeat & PAD_SELECT)
+		else if (padNoRepeat & PAD_SELECT)
 		{
-			pgenRuntimeSetting.input[pgenRuntimeSetting.xpressed] = PAD_SELECT;
+			pgenRuntimeSetting.settings.input[pgenRuntimeSetting.xpressed] = PAD_SELECT;
 			pgenRuntimeSetting.xpressed++;
 		}
-		
 		if(pgenRuntimeSetting.xpressed > 8)
 			pgenRuntimeSetting.xpressed=0;
 		updateOptionString();

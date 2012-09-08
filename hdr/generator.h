@@ -284,7 +284,6 @@ extern unsigned int gen_quit;
 extern unsigned int gen_debugmode;
 extern unsigned int gen_loglevel;
 extern unsigned int gen_autodetect;
-extern unsigned int gen_modifiedrom;
 extern unsigned int gen_region;
 extern t_musiclog gen_musiclog;
 extern char gen_leafname[];

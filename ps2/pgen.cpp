@@ -19,18 +19,19 @@ t_pgenRuntimeSetting pgenRuntimeSetting = {
 		0,		// FPS counter: Off
 		0,		// Save device: Memory card
 
-		680, 37		// PAL x/y offset
+		680, 37	,	// PAL x/y offset
+		PAD_SQUARE,	//a = square
+		PAD_CROSS,	//b = X
+		PAD_CIRCLE,	//c = Circle
+		PAD_L1,		//x = L1
+		PAD_R1,		//y = R1
+		PAD_R2,		//z = R2
+		PAD_START,	//start = Start
+		PAD_L2,		//L2 = Mode
+		PAD_SELECT	//Select = Pause
+
 	},
-	0,
-	PAD_SQUARE,	//a = square
-	PAD_CROSS,	//b = X
-	PAD_CIRCLE,	//c = Circle
-	PAD_L1,		//x = L1
-	PAD_R1,		//y = R1
-	PAD_R2,		//z = R2
-	PAD_START,	//start = Start
-	PAD_L2,		//L2 = Mode
-	PAD_SELECT	//Select = Pause
+	0
 };
 
 int pgenRunning;
@@ -165,7 +166,8 @@ void initialise()
 
 	loadHddModules();
 	poweroffInit();
-	poweroffSetCallback(&powerOffCallback, NULL);
+	//poweroffSetCallback(&powerOffCallback, NULL);
+	poweroffSetCallback(powerOffCallback, NULL);
 
 	// Setup default region settings (will be over-written if a config file is found)
 	if(((*((char*)0x1FC7FF52))=='E')+2 == NTSC)
@@ -360,7 +362,6 @@ int loadModuleBuffer(u8 *buffer, int size, int argc, char *argv)
 void powerOffCallback(void *arg)
 {
 	pgenState = PGEN_STATE_GUI;
-	//poweroffShutdown();
 }
 
 
