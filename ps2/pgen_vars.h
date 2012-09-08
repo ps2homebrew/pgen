@@ -18,6 +18,7 @@ typedef struct
 	u8 saveDevice;				// 0 = Memory Card, 1 = HDD
 	
 	u16 dispX, dispY;		// X & Y offset parameters for both PAL and NTSC display modes.
+	u16 input[9];
 
 } t_pgenSettings;
 
@@ -33,8 +34,6 @@ typedef struct
 	t_pgenSettings settings;
 
 	int xpressed;
-
-	u16 input[9];
 
 } t_pgenRuntimeSetting;
 

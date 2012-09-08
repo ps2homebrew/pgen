@@ -23,16 +23,16 @@ int ingamePadManager::updateEmulationInput()
 	if(padData & PAD_RIGHT)		genKeys->right = 1;
 	if(padData & PAD_UP)		genKeys->up = 1;
 	if(padData & PAD_DOWN)		genKeys->down = 1;
-	if(padData & pgenRuntimeSetting.input[0])	genKeys->a = 1;
-	if(padData & pgenRuntimeSetting.input[1])		genKeys->b = 1;
-	if(padData & pgenRuntimeSetting.input[2])	genKeys->c = 1;
-	if(padData & pgenRuntimeSetting.input[3])		genKeys->x = 1;
-	if(padData & pgenRuntimeSetting.input[4])		genKeys->y = 1;
-	if(padData & pgenRuntimeSetting.input[5])		genKeys->z = 1;
-	if(padData & pgenRuntimeSetting.input[6])		genKeys->start = 1;
-	if(padData & pgenRuntimeSetting.input[7])		genKeys->mode = 1;
+	if(padData & pgenRuntimeSetting.settings.input[0])		genKeys->a = 1;
+	if(padData & pgenRuntimeSetting.settings.input[1])		genKeys->b = 1;
+	if(padData & pgenRuntimeSetting.settings.input[2])		genKeys->c = 1;
+	if(padData & pgenRuntimeSetting.settings.input[3])		genKeys->x = 1;
+	if(padData & pgenRuntimeSetting.settings.input[4])		genKeys->y = 1;
+	if(padData & pgenRuntimeSetting.settings.input[5])		genKeys->z = 1;
+	if(padData & pgenRuntimeSetting.settings.input[6])		genKeys->start = 1;
+	if(padData & pgenRuntimeSetting.settings.input[7])		genKeys->mode = 1;
 
-	if(padData & pgenRuntimeSetting.input[8]) execIngame = 1;
+	if(padData & pgenRuntimeSetting.settings.input[8]) 		execIngame = 1;
 
 	return execIngame;
 }
@@ -144,7 +144,7 @@ void updateIngameInput()
 
 extern "C" int isModePressed()
 {
-	if(guiPad->updateInput() & PAD_SELECT)
+	if(guiPad->updateInput() & pgenRuntimeSetting.settings.input[7])
 		return 1;
 	else
 		return 0;

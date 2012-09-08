@@ -25,7 +25,6 @@ unsigned int gen_debugmode = 0;
 unsigned int gen_loglevel = 0;  /* 2 = NORMAL, 1 = CRITICAL */
 unsigned int gen_autodetect = 1; /* 0 = no, 1 = yes */
 unsigned int gen_musiclog = 0; /* 0 = no, 1 = GYM, 2 = GNM */
-unsigned int gen_modifiedrom = 0; /* 0 = no, 1 = yes */
 t_cartinfo gen_cartinfo;
 char gen_leafname[128];
 
@@ -474,7 +473,6 @@ char *gen_loadimage(char *filename)
                gen_cartinfo.name_overseas, gen_cartinfo.version,
                gen_cartinfo.checksum, gen_cartinfo.country));
 
-  gen_modifiedrom = 0;
 
 */
   return NULL;
