@@ -86,8 +86,8 @@ int main(int argc, char *argv[])
 			fadeIn = 0;
 			continue;
 		}
-
-		CDVD_Stop();
+//		if (CDVD_DISKREADY(1))
+//			CDVD_Stop();
 		preEmulationProcess();
 
 		while(pgenRunning)

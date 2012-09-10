@@ -156,6 +156,7 @@ void gfxVsyncCb()
 			break;
 
 		case NTSC:
+		case VGA640_60:
 			if(vrCount >= 60)
 			{
 				framesPerSecond = localFrameCount;
@@ -188,6 +189,7 @@ void initGFX()
 			break;
 
 		case NTSC:
+		case VGA640_60:
 
 			pgenRuntimeSetting.maxFrameSec = 60;
 
@@ -218,7 +220,7 @@ void gfxChangeDefaultVideoMode(int vidMode)
 			break;
 
 		case NTSC:
-
+		case VGA640_60:
 			pgenRuntimeSetting.maxFrameSec = 60;
 
 			break;
@@ -270,6 +272,7 @@ void gfxUpdateIngameDisplay(int flush)
 		else
 			drawPipe->RectTexture(32, 0, 48, 8, 288, vdp_vislines, 256 + 48, vdp_vislines + 8, 1, GS_SET_RGBA(0x80, 0x80, 0x80, 0x80));
 	}
+	
 
 	// Draw framecount
 	if(pgenRuntimeSetting.settings.displayFps)
@@ -286,6 +289,10 @@ void gfxUpdateIngameDisplay(int flush)
 			case NTSC:
 				maxFps = 60;
 				fpsYPos = 208;
+				break;
+			case VGA640_60:
+				maxFps = 60;
+				fpsYPos = 448;
 				break;
 		}
 
@@ -402,6 +409,14 @@ void gfxSetNtsc()
 		pgenRuntimeSetting.settings.dispY);
 }
 
+void gfxSetVGA640_60()
+{
+	dispDriver->setDisplayMode(320, 240, VGA640_60, NONINTERLACE, 
+		GS_PSMCT16, GS_ENABLE, GS_PSMZ16, 4);
+	dispDriver->setDisplayPosition(pgenRuntimeSetting.settings.dispX,
+		pgenRuntimeSetting.settings.dispY);
+}
+
 void gfxUpdateGuiVideoMode()
 {
 	switch(pgenRuntimeSetting.guiVideoMode)
@@ -414,6 +429,11 @@ void gfxUpdateGuiVideoMode()
 		case NTSC:
 
 			gfxSetNtsc();
+			break;
+
+		case VGA640_60:
+
+			gfxSetVGA640_60();
 			break;
 	}
 }
