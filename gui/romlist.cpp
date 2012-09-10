@@ -16,14 +16,6 @@ guiRomlist::guiRomlist(int x, int y, int w, int h) : scrollList(x + 3, y + 2, w 
 	this->h = h;
 	scrollWidth = 8;
 
-	/*strcpy(defaultMemcardDir, "/BRDATA-SYSTEM");
-	u8 romver[16];
-	int fd = fioOpen("rom0:ROMVER", O_RDONLY);
-	fioRead(fd, romver, sizeof romver);
-	fioClose(fd);
-	defaultMemcardDir[2] = (romver[4] == 'E' ? 'E' :
-			(romver[4] == 'J' ? 'I' : 'A'));*/
-
 	virtualRomlist = (t_romlistEntry *)malloc(sizeof(t_romlistEntry) * 128);
 	romlist = (t_romlistEntry *)malloc(sizeof(t_romlistEntry) * ROMLIST_MAX_ENTRIES);
 	sortedList = (t_romlistEntry **)malloc(sizeof(t_romlistEntry *) * ROMLIST_MAX_ENTRIES);
@@ -161,19 +153,6 @@ void guiRomlist::update(u32 padRepeat, u32 padNoRepeat)
 					}
 					else
 					{
-						// If entering memcard, try and start in BRDATA-SYSTEM directory
-						/*if(	strstr(sortedList[selection]->fileName, "mc0:") ||
-							strstr(sortedList[selection]->fileName, "mc1:"))
-						{
-							t_aioDent dent;
-
-							if(currentAIO->getstat(defaultMemcardDir, &dent) == 0)
-							{
-								strcpy(path, defaultMemcardDir);
-								dirLevel++;
-							}
-						}
-						else*/
 						strcpy(path, "/");
 
 						dirLevel++;

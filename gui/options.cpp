@@ -296,9 +296,9 @@ void guiOptionsMenu::update(u32 padRepeat, u32 padNoRepeat)
 	}
 	if (selection == 9)
 	{
-		if (padNoRepeat & PAD_CROSS)
+		if (padNoRepeat & PAD_SELECT)
 		{
-			pgenRuntimeSetting.settings.input[pgenRuntimeSetting.xpressed] = PAD_CROSS;
+			pgenRuntimeSetting.settings.input[pgenRuntimeSetting.xpressed] = PAD_SELECT;
 			pgenRuntimeSetting.xpressed++;
 		}
 		else if (padNoRepeat & PAD_SQUARE)
@@ -351,10 +351,13 @@ void guiOptionsMenu::update(u32 padRepeat, u32 padNoRepeat)
 			pgenRuntimeSetting.settings.input[pgenRuntimeSetting.xpressed] = PAD_START;
 			pgenRuntimeSetting.xpressed++;
 		}
-		else if (padNoRepeat & PAD_SELECT)
+		else if (padNoRepeat & PAD_CROSS)
 		{
-			pgenRuntimeSetting.settings.input[pgenRuntimeSetting.xpressed] = PAD_SELECT;
-			pgenRuntimeSetting.xpressed++;
+			if (pgenRuntimeSetting.xpressed != 8)
+			{
+				pgenRuntimeSetting.settings.input[pgenRuntimeSetting.xpressed] = PAD_CROSS;
+				pgenRuntimeSetting.xpressed++;
+			}
 		}
 		if(pgenRuntimeSetting.xpressed > 8)
 			pgenRuntimeSetting.xpressed=0;

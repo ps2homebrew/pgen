@@ -156,6 +156,7 @@ void gfxVsyncCb()
 			break;
 
 		case NTSC:
+		case VGA640_60:
 			if(vrCount >= 60)
 			{
 				framesPerSecond = localFrameCount;
@@ -188,6 +189,7 @@ void initGFX()
 			break;
 
 		case NTSC:
+		case VGA640_60:
 
 			pgenRuntimeSetting.maxFrameSec = 60;
 
@@ -218,6 +220,7 @@ void gfxChangeDefaultVideoMode(int vidMode)
 			break;
 
 		case NTSC:
+		case VGA640_60:
 
 			pgenRuntimeSetting.maxFrameSec = 60;
 
@@ -286,6 +289,10 @@ void gfxUpdateIngameDisplay(int flush)
 			case NTSC:
 				maxFps = 60;
 				fpsYPos = 208;
+				break;
+			case VGA640_60:
+				maxFps = 60;
+				fpsYPos = 448;
 				break;
 		}
 
@@ -412,6 +419,7 @@ void gfxUpdateGuiVideoMode()
 			break;
 
 		case NTSC:
+		case VGA640_60:
 
 			gfxSetNtsc();
 			break;
@@ -429,6 +437,7 @@ void gfxUpdateIngameVideoMode()
 			break;
 
 		case NTSC:
+		case VGA640_60:
 
 			pgenRuntimeSetting.maxFrameSec = 60;
 			gfxSetNtsc();
