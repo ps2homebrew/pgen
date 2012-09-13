@@ -16,7 +16,7 @@ usbIO::usbIO(int maxEntries)
 
 	fatEntries = NULL;
 
-	fatEntries = (fat_dir_record *)memalign(64, sizeof(fat_dir_record) * maxEntries);
+	fatEntries = (fat_dir *)memalign(64, sizeof(fat_dir) * maxEntries);
 	if(!fatEntries)
 		guiFatalError("Failed to allocate memory!");
 

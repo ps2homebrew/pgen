@@ -5,13 +5,13 @@
 # Subdir Makefile (static-data)
 #
 # NOTE: Datafiles must be converted into .s files with bin2s first!
-#
+
 
 include ../Makefile.include
 
 OBJECTS	=	ocra-fnt.o zerohour-fnt.o pgenbg.o folder.o sonic.o \
 		amigamodIrx.o cdvdIrx.o fileXioIrx.o ps2hddIrx.o iomanXIrx.o ps2fsIrx.o poweroffIrx.o \
-		ps2atadIrx.o ps2dev9Irx.o sjpcmIrx.o musicZip.o usbdIrx.o usb_massIrx.o freesdIrx.o freesio2Irx.o \
+		ps2atadIrx.o ps2dev9Irx.o sjpcmIrx.o musicZip.o usbdIrx.o usbhdfsdIrx.o freesdIrx.o freesio2Irx.o \
 		freepadIrx.o xmcmanIrx.o xmcservIrx.o freemtapIrx.o
 
 ZIPFILES = *.mod

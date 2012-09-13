@@ -8,7 +8,7 @@
 
 #define AIO_STATE_ERROR			0x01
 
-#include "mass_rpc.h"
+#include "fat_driver.h"
 
 typedef struct {
 	char name[256];
@@ -135,7 +135,7 @@ class usbIO : public abstractIO {
 
 		int tocEntryCompare(char* filename, const char* extensions);
 
-		fat_dir_record *fatEntries;
+		fat_dir *fatEntries;
 };
 
 

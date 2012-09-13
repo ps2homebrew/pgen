@@ -245,8 +245,9 @@ void loadModules()
 	loadModuleBuffer(iomanXIrx, 102400, 0, NULL);
 	loadModuleBuffer(fileXioIrx, 102400, 0, NULL);
 
-	loadModuleBuffer(usbdIrx, size_usbdIrx, 0, NULL);
-	loadModuleBuffer(usb_massIrx, size_usb_massIrx, 0, NULL);
+	loadModuleBuffer(usbdIrx, size_usbd_irx, 0, NULL);
+	//loadModuleBuffer(usb_massIrx, size_usb_massIrx, 0, NULL);
+	loadModuleBuffer(&usbhdfsdIrx, size_usbhdfsd_irx, 0, NULL);
 
 }
 
