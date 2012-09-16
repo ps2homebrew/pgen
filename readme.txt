@@ -124,7 +124,7 @@
    | roms to use the standard rom naming convention. You can download the   |
    | GoodGEN utility from the PGEN website.                                 |
    |                                                                        |
-   | NOTE: Roms MUST have either a ".bin", ".smd", ".gen" or ".zip"         |
+   | NOTE: Roms MUST have either a ".bin", ".smd", ".gen", ".md" or ".zip"  |
    |       extension to be recognised by PGEN.                              |
    +-+                                                                    +-+
    +++--------------------------------------------------------------------+++

@@ -218,6 +218,9 @@ void pgenRom::readZippedRom(abstractIO *aio, const char *zipname)
 			if(!strcasecmp(extension, ".gen"))
 				break;
 
+			if(!strcasecmp(extension, ".md"))
+				break;
+
 			if(!strcasecmp(extension, ".smd"))
 				break;
 		}

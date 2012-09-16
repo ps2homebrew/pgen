@@ -84,6 +84,9 @@ void guiOptionsMenu::updateOptionString()
 			case PAL:
 				strcat(&optionString[8][0], "PAL");
 				break;
+			case VGA640_60:
+				strcat(&optionString[8][0], "VGA640_60");
+				break;
 	}
 
 	strcpy(&optionString[9][0], "Button remapping: ");
@@ -271,11 +274,14 @@ void guiOptionsMenu::update(u32 padRepeat, u32 padNoRepeat)
 				pgenRuntimeSetting.settings.displayFps ^= 1;
 				break;
 			
-			case 8:	// Video system
+			case 8:	// Video system VGA640_60
 
 				pgenRuntimeSetting.guiVideoMode++;
-				if(pgenRuntimeSetting.guiVideoMode > 3) 
-					pgenRuntimeSetting.guiVideoMode = 2;
+				if(pgenRuntimeSetting.guiVideoMode > 3)
+					if(pgenRuntimeSetting.guiVideoMode <= VGA640_60)
+						pgenRuntimeSetting.guiVideoMode = VGA640_60;
+					else
+						pgenRuntimeSetting.guiVideoMode = 2;						
 				gfxChangeDefaultVideoMode(pgenRuntimeSetting.guiVideoMode); 
 
 				break;

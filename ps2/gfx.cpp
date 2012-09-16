@@ -397,16 +397,18 @@ void gfxSetPal()
 {
 	dispDriver->setDisplayMode(320, 240, PAL, NONINTERLACE, 
 		GS_PSMCT16, GS_ENABLE, GS_PSMZ16, 4);
-	dispDriver->setDisplayPosition(pgenRuntimeSetting.settings.dispX,
-		pgenRuntimeSetting.settings.dispY);
 }
 
 void gfxSetNtsc()
 {
 	dispDriver->setDisplayMode(320, 240, NTSC, NONINTERLACE, 
 		GS_PSMCT16, GS_ENABLE, GS_PSMZ16, 4);
-	dispDriver->setDisplayPosition(pgenRuntimeSetting.settings.dispX,
-		pgenRuntimeSetting.settings.dispY);
+}
+
+void gfxSetVGA640_60()
+{
+	dispDriver->setDisplayMode(320, 240, VGA640_60, NONINTERLACE, 
+		GS_PSMCT16, GS_ENABLE, GS_PSMZ16, 4);
 }
 
 void gfxUpdateGuiVideoMode()
@@ -419,11 +421,19 @@ void gfxUpdateGuiVideoMode()
 			break;
 
 		case NTSC:
-		case VGA640_60:
 
 			gfxSetNtsc();
 			break;
+
+		case VGA640_60:
+
+			gfxSetVGA640_60();
+			break;
+
 	}
+	dispDriver->setDisplayPosition(pgenRuntimeSetting.settings.dispX,
+	pgenRuntimeSetting.settings.dispY);
+
 }
 
 void gfxUpdateIngameVideoMode()
@@ -437,10 +447,16 @@ void gfxUpdateIngameVideoMode()
 			break;
 
 		case NTSC:
-		case VGA640_60:
 
 			pgenRuntimeSetting.maxFrameSec = 60;
 			gfxSetNtsc();
 			break;
+
+		case VGA640_60:
+
+			pgenRuntimeSetting.maxFrameSec = 60;
+			gfxSetVGA640_60();
+			break;
+
 	}
 }

@@ -288,7 +288,7 @@ void guiRomlist::fillRomlist()
 #ifdef SHOW_ALL_FILES
 	numRoms = currentAIO->getdir(path, NULL, romlistDent, ROMLIST_MAX_ENTRIES);
 #else
-	numRoms = currentAIO->getdir(path, ".smd, .bin, .zip, .gen", romlistDent, ROMLIST_MAX_ENTRIES);
+	numRoms = currentAIO->getdir(path, ".smd, .bin, .zip, .gen, .md", romlistDent, ROMLIST_MAX_ENTRIES);
 #endif
 
 	if(numRoms < 0)
