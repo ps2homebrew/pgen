@@ -10,7 +10,7 @@ include ../Makefile.include
 OBJECTS		= z80.o
 
 all: $(OBJECTS)
-	cp -f $(OBJECTS) ../build/
+	cp -f $(OBJECTS) ../ps2/build/
 
 clean:
 	$(RM) *.o *.map *.lst core *.dis *.elf

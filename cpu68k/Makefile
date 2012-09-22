@@ -19,7 +19,7 @@ BUILT_SOURCES = def68k-iibs.h def68k-funcs.h def68k-proto.h \
                 cpu68k-c.c cpu68k-d.c cpu68k-e.c cpu68k-f.c
 
 all: $(BUILT_SOURCES) $(OBJECTS)
-	cp -f $(OBJECTS) ../build/
+	cp -f $(OBJECTS) ../ps2/build/
 
 clean:
 	$(RM) *.o *.map *.lst core *.dis *.elf gen68k def68k cpu68k-* def68k-*

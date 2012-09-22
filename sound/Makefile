@@ -12,7 +12,7 @@ CFLAGS +=	-I$(NEWLIB)/include
 OBJECTS		= psg.o ym2612.o
 
 all: $(OBJECTS)
-	cp -f $(OBJECTS) ../build/
+	cp -f $(OBJECTS) ../ps2/build/
 
 clean:
 	$(RM) *.o *.map *.lst core *.dis *.elf
