@@ -150,8 +150,27 @@ void guiIngameMenu::update(u32 padRepeat, u32 padNoRepeat)
 						rv = currentRom->state->saveState();
 						if(rv < 0)
 						{
-							currentError = "Failed to create save";
+							switch(rv)
+							{
+								case STATE_ERROR_CREATE_SAVE:
+									currentError = "Failed to create saved state";
+									break;
+
+								case STATE_ERROR_SAVE_OPEN:
+									currentError = "Failed to open saved state";
+									break;
+
+								case STATE_ERROR_SAVE_WRITE:
+									currentError = "Failed to write saved state";
+									break;
+							}
+
 							flag = INGAME_FLAG_ERROR;
+						
+							//char* buf;
+							//sprintf(buf,"%d",rv);
+							//currentError = buf;
+							//flag = INGAME_FLAG_ERROR;
 						}
 
 						break;

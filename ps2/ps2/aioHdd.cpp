@@ -79,7 +79,6 @@ hddIO::~hddIO()
 int hddIO::open(const char *name, int flags)
 {
 	char openString[1024];
-
 #ifdef AIOHDD_DEBUG
 //	printf("hddIO open\n");
 #endif
